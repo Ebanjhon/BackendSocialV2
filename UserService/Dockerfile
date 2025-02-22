@@ -7,8 +7,7 @@ WORKDIR /app
 # Sao chép file JAR vào container
 COPY target/*.jar app.jar
 
-# Mở cổng 8080
-EXPOSE 8080
+EXPOSE 8081
 
 # Chạy ứng dụng
 CMD ["java", "-jar", "app.jar"]

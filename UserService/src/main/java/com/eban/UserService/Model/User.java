@@ -52,6 +52,8 @@ public class User {
         this.timeCreated = LocalDateTime.now();
     }
 
+    public User() {}
+
     public User(Long id, Gender gender, String username, String firstname, String lastname, String email, String avatar, String phone, LocalDate birthDate, boolean active, LocalDateTime timeCreated) {
         this.id = id;
         this.gender = gender;

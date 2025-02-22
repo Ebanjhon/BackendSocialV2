@@ -30,4 +30,5 @@ public class UserServiceImpl implements UserService {
     public boolean isEmailExist(String email) {
         return userRepo.existsByEmail(email);
     }
+
 }

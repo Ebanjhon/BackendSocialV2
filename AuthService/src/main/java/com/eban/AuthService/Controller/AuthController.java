@@ -24,6 +24,12 @@ public class AuthController {
     @Autowired
     private JwtTokenFilter jwtTokenFilter;
 
+    @GetMapping
+    public ResponseEntity<Object> getUser(@RequestParam String username) {
+        Optional<User> u = userService.GetUserByUserName(username);
+        return ResponseEntity.status(HttpStatus.OK).body(u);
+    }
+
     @PostMapping("/register")
     public ResponseEntity<Object> Register(@RequestBody User user) {
         if(userService.isUserNameExist(user.getUsername()) || userService.isEmailExist(user.getEmail())){
@@ -33,7 +39,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userCreated);
     }
 
-    @PostMapping("/login")
+    @PostMapping
     public ResponseEntity<Object> authenticateUser(@RequestParam String username, @RequestParam String password) {
         Optional<User> user = userService.authenticate(username, password);
         if (user.isPresent()) {
@@ -46,5 +52,15 @@ public class AuthController {
         }
         String token = jwtTokenFilter.generateToken(username, user.get().getRole());
         return ResponseEntity.ok(token);
+    }
+
+    @PostMapping("/token")
+    public ResponseEntity<String> invalidateToken(@RequestParam String token) {
+        String result = jwtTokenFilter.validateToken(token);
+        if(result != null)
+        {
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body("Khong hop le");
     }
 }

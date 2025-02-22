@@ -1,9 +1,7 @@
 package com.eban.AuthService.AuthConfig;
 
 import com.eban.AuthService.model.Role;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,7 +31,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 .compact(); // Tạo và trả về JWT
     }
 
-
     //    Auth
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -62,5 +59,26 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    // ✅ Phương thức xác thực Token
+    public String validateToken(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(SECRET_KEY)
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            return claims.getSubject();
+        } catch (ExpiredJwtException e) {
+            System.out.println("Token hết hạn");
+        } catch (MalformedJwtException e) {
+            System.out.println("Token không hợp lệ");
+        } catch (SignatureException e) {
+            System.out.println("Chữ ký không đúng");
+        } catch (Exception e) {
+            System.out.println("Lỗi xác thực token: " + e.getMessage());
+        }
+        return null;
     }
 }
