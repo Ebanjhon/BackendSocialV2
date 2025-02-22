@@ -1,78 +1,43 @@
-package com.eban.UserService.Model;
+package com.eban.UserService.DTO;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
-import lombok.Data;
-
+import com.eban.UserService.Model.Gender;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Data
-@Entity
-@Table(name = "\"user\"")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = true)
+public class UserReq {
     private Gender gender;
-
-    @Column(nullable = false, unique = true)
     private String username;
-
-    @Column(nullable = false)
+    private String password;
     private String firstname;
-
-    @Column(nullable = true)
     private String lastname;
-
-    @Column(nullable = false)
     private String email;
-
-    @Column(nullable = true)
     private String avatar;
-
-    @Column(nullable = true)
     private String phone;
-
-    @Column(nullable = true)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
-
-    @Column(nullable = false)
     private boolean active = true;
-
-    @Column(nullable = false, updatable = false)
     private LocalDateTime timeCreated;
 
-    @PrePersist
     protected void onCreate() {
         this.timeCreated = LocalDateTime.now();
     }
 
-    public User() {}
+    public UserReq() {}
 
-    public User(Gender gender, String username, String firstname, String lastname, String email, String avatar, String phone, LocalDate birthDate) {
+    public UserReq(Gender gender, String username,String password, String firstname, String lastname, String email, String avatar, String phone, LocalDate birthDate, boolean active, LocalDateTime timeCreated) {
         this.gender = gender;
         this.username = username;
+        this.password = password;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.avatar = avatar;
         this.phone = phone;
         this.birthDate = birthDate;
+        this.active = active;
+        this.timeCreated = timeCreated;
     }
+
     // getter and setter
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Gender getGender() {
         return gender;
     }
@@ -87,6 +52,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getFirstname() {

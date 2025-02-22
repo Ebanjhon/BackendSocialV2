@@ -36,7 +36,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Thông tin đăng ký không hợp lệ!");
         }
         User userCreated = userService.saveUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(userCreated);
+        return ResponseEntity.status(HttpStatus.OK).body(userCreated);
     }
 
     @PostMapping
@@ -54,13 +54,14 @@ public class AuthController {
         return ResponseEntity.ok(token);
     }
 
-    @PostMapping("/token")
-    public ResponseEntity<String> invalidateToken(@RequestParam String token) {
+    @GetMapping("/token")
+    public ResponseEntity<Object> invalidateToken(@RequestParam String token) {
         String result = jwtTokenFilter.validateToken(token);
-        if(result != null)
+        Optional<User> user = userService.GetUserByUserName(result);
+        if(user.isPresent())
         {
-            return ResponseEntity.ok(result);
+            return ResponseEntity.ok(user);
         }
-        return ResponseEntity.badRequest().body("Khong hop le");
+        return ResponseEntity.badRequest().body(null);
     }
 }
