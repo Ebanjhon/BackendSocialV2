@@ -25,6 +25,16 @@ services:
     networks:
       - app_network
 
+  api-gateway:
+    build: ./Api-gateway
+    ports:
+      - "8888:8888"
+    environment:
+      AUTH_SERVICE_URL: http://auth-service:8080
+      USER_SERVICE_URL: http://user-service:8081
+    networks:
+      - app_network
+
 networks:
   app_network:
     driver: bridge
