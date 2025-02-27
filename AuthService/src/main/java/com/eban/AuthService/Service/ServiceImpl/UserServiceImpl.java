@@ -22,8 +22,12 @@ public class UserServiceImpl implements UserService {
     }
 
     public User saveUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepo.save(user);
+        try {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            return userRepo.save(user);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Optional<User> authenticate(String username, String password) {

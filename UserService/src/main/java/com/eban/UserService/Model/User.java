@@ -1,23 +1,14 @@
 package com.eban.UserService.Model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Table(name = "\"user\"")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = true)
-    private Gender gender;
+    private String userId;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -28,57 +19,31 @@ public class User {
     @Column(nullable = true)
     private String lastname;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = true)
     private String avatar;
 
-    @Column(nullable = true)
-    private String phone;
-
-    @Column(nullable = true)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate birthDate;
-
     @Column(nullable = false)
     private boolean active = true;
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime timeCreated;
-
-    @PrePersist
-    protected void onCreate() {
-        this.timeCreated = LocalDateTime.now();
-    }
-
     public User() {}
 
-    public User(Gender gender, String username, String firstname, String lastname, String email, String avatar, String phone, LocalDate birthDate) {
-        this.gender = gender;
+    public User(String userId, String username, String firstname, String lastname, String email) {
+        this.userId = userId;
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
-        this.avatar = avatar;
-        this.phone = phone;
-        this.birthDate = birthDate;
-    }
-    // getter and setter
-    public Long getId() {
-        return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getUserId() {
+        return userId;
     }
 
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -121,35 +86,11 @@ public class User {
         this.avatar = avatar;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
-
     public boolean isActive() {
         return active;
     }
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public LocalDateTime getTimeCreated() {
-        return timeCreated;
-    }
-
-    public void setTimeCreated(LocalDateTime timeCreated) {
-        this.timeCreated = timeCreated;
     }
 }

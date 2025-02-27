@@ -1,13 +1,18 @@
 package com.eban.AuthService.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "\"user\"")
 public class User {
+    @SuppressWarnings("deprecation")
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "userid", updatable = false, nullable = false, unique = true)
+    private String userId;
     @Column(name = "username", nullable = false)
     private String username;
     @Column(name = "email", nullable = false)
@@ -22,19 +27,18 @@ public class User {
         this.role = Role.ROLE_USER;
     }
 
-    public User(Long userId, String username, String password, String email, Role role) {
-        this.userId = userId;
+    public User(String username, String password, String email, Role role) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
