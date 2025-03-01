@@ -14,14 +14,15 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class Feed {
-    @SuppressWarnings("deprecation")
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "feedId", updatable = false, nullable = false, unique = true)
     private String feedId;
+
     @Column(name = "authorId", nullable = false)
     private String authorId;
+
     @Lob
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
