@@ -2,8 +2,8 @@ package com.eban.UserService.Service.ServiceImpl;
 
 import com.eban.UserService.Config.ApiEndpoints;
 import com.eban.UserService.DTO.RegisterReq;
-import com.eban.UserService.DTO.UserReq;
-import com.eban.UserService.DTO.UserRsp;
+import com.eban.UserService.DTO.UserRequest;
+import com.eban.UserService.DTO.UserResponse;
 import com.eban.UserService.Model.User;
 import com.eban.UserService.Repository.UserRepository;
 import com.eban.UserService.Service.UserService;
@@ -22,13 +22,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public Optional<User> GetUserByUserName(String username) {
+    public Optional<UserResponse> GetUserByUserName(String username) {
         return userRepo.findUserByUsername(username);
     }
 
-    public User saveUser(UserRsp user) {
+    public User saveUser(UserRequest user) {
         RegisterReq authRequest = new RegisterReq(user.getUsername(), user.getPassword(), user.getEmail());
-        ResponseEntity<String> response = restTemplate.postForEntity(ApiEndpoints.REGISTER_USER, authRequest, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity(ApiEndpoints.REGISTER_USER, authRequest,
+                String.class);
         if (response.getStatusCode().is2xxSuccessful()) {
             User userCreate = new User(response.getBody(), user.getUsername(), user.getFirstname(), user.getLastname(),
                     user.getEmail());

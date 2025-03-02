@@ -1,6 +1,16 @@
 version: "3.8"
 
 services:
+  api-gateway:
+    build: ./Api-gateway
+    ports:
+      - "8888:8888"
+    environment:
+      AUTH_SERVICE_URL: http://auth-service:8080
+      USER_SERVICE_URL: http://user-service:8081
+    networks:
+      - app_network
+
   auth-service:
     build: ./AuthService
     ports:
@@ -17,6 +27,7 @@ services:
     build: ./UserService
     ports:
       - "8081:8081"
+      - "50051:50051" # host service proto
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/user_db
       SPRING_DATASOURCE_USERNAME: postgres
@@ -25,15 +36,17 @@ services:
     networks:
       - app_network
 
-  api-gateway:
-    build: ./Api-gateway
-    ports:
-      - "8888:8888"
-    environment:
-      AUTH_SERVICE_URL: http://auth-service:8080
-      USER_SERVICE_URL: http://user-service:8081
-    networks:
-      - app_network
+  # feed-service:
+  #   build: ./FeedService
+  #   ports:
+  #     - "8082:8082"
+  #   environment:
+  #     SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/feed_db
+  #     SPRING_DATASOURCE_USERNAME: postgres
+  #     SPRING_DATASOURCE_PASSWORD: 123456
+  #     SPRING_JPA_HIBERNATE_DDL_AUTO: create
+  #   networks:
+  #     - app_network
 
 networks:
   app_network:

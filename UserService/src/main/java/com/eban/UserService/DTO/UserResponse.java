@@ -1,42 +1,27 @@
-package com.eban.UserService.Model;
+package com.eban.UserService.DTO;
 
-import jakarta.persistence.*;
-import lombok.Data;
-
-@Data
-@Entity
-@Table(name = "\"user\"")
-public class User {
-    @Id
-    @Column(name = "user_id")
+public class UserResponse {
     private String userId;
-
-    @Column(nullable = false, unique = true)
     private String username;
-
-    @Column(nullable = false)
     private String firstname;
-
-    @Column(nullable = true)
     private String lastname;
-
-    @Column(nullable = false, unique = true)
     private String email;
-
-    @Column(nullable = true)
     private String avatar;
+    private Boolean isCurentUser;
+    private Boolean isActive;
 
-    @Column(nullable = false)
-    private boolean active = false;
+    public UserResponse() {
+    }
 
-    public User() {}
-
-    public User(String userId, String username, String firstname, String lastname, String email) {
+    public UserResponse(String userId, String username, String firstname, String lastname, String email, String avatar,
+            Boolean isActive) {
         this.userId = userId;
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
+        this.avatar = avatar;
+        this.isActive = isActive;
     }
 
     public String getUserId() {
@@ -87,11 +72,19 @@ public class User {
         this.avatar = avatar;
     }
 
-    public boolean isActive() {
-        return active;
+    public Boolean getCurentUser() {
+        return isCurentUser;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setCurentUser(Boolean curentUser) {
+        isCurentUser = curentUser;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 }

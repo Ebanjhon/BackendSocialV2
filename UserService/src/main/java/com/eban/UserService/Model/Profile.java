@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "\"profile\"")
 public class Profile {
     @Id
+    @Column(name = "user_id")
     private String userId;
 
     @Column(nullable = true)

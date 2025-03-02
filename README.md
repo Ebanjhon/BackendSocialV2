@@ -15,3 +15,5 @@ chạy rabbitMQ: docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 -e RA
 http://localhost:15672
 
 mvn spring-boot:run
+
+sinh file proto: mvn clean compile

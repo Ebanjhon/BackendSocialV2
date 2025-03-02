@@ -1,6 +1,7 @@
 package com.eban.UserService.Controller;
 
-import com.eban.UserService.DTO.UserRsp;
+import com.eban.UserService.DTO.UserRequest;
+import com.eban.UserService.DTO.UserResponse;
 import com.eban.UserService.Model.User;
 import com.eban.UserService.Service.ServiceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class UserController {
     private UserServiceImpl userService;
 
     @PostMapping
-    public ResponseEntity<Object> saveUserProfile(@RequestBody UserRsp user) {
+    public ResponseEntity<Object> saveUserProfile(@RequestBody UserRequest user) {
         if(userService.isUserNameExist(user.getUsername()) || userService.isEmailExist(user.getEmail())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tên người dùng và email đã có sẳn!");
         }
@@ -30,10 +31,11 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getUserProfile(@RequestParam String username) {
-        Optional<User> user = userService.GetUserByUserName(username);
+    public ResponseEntity<Object> getUserProfile(@RequestParam String username, @RequestHeader Map<String, String> headers) {
+        Optional<UserResponse> user = userService.GetUserByUserName(username);
         if(user.isPresent())
         {
+            user.get().setCurentUser(username == headers.get("x-username"));
             return ResponseEntity.status(HttpStatus.OK).body(user);
         }else{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Không tìm thấy user!");

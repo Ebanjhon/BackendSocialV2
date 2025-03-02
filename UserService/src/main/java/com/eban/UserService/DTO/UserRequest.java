@@ -1,16 +1,16 @@
 package com.eban.UserService.DTO;
 
-public class UserRsp {
+public class UserRequest {
     private String username;
     private String password;
     private String firstname;
     private String lastname;
     private String email;
 
-    public UserRsp() {
+    public UserRequest() {
     }
 
-    public UserRsp(String username, String password, String firstname, String lastname, String email) {
+    public UserRequest(String username, String password, String firstname, String lastname, String email) {
         this.username = username;
         this.password = password;
         this.firstname = firstname;
