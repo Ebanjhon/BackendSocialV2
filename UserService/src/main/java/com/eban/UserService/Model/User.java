@@ -1,5 +1,7 @@
 package com.eban.UserService.Model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -29,7 +31,16 @@ public class User {
     @Column(nullable = false)
     private boolean active = false;
 
-    public User() {}
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime dateJoid;
+
+    @PrePersist
+    protected void onCreate() {
+        this.dateJoid = LocalDateTime.now();
+    }
+
+    public User() {
+    }
 
     public User(String userId, String username, String firstname, String lastname, String email) {
         this.userId = userId;

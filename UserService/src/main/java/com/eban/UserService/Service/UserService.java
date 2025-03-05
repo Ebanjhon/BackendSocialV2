@@ -1,5 +1,6 @@
 package com.eban.UserService.Service;
 
+import com.eban.UserService.DTO.UserDetailResponse;
 import com.eban.UserService.DTO.UserRequest;
 import com.eban.UserService.DTO.UserResponse;
 import com.eban.UserService.Model.User;
@@ -10,6 +11,8 @@ import java.util.Optional;
 @Service
 public interface UserService {
     Optional<UserResponse> GetUserByUserName(String username);
+
+    Optional<UserDetailResponse> GetUserDetailByUserName(String username);
 
     User saveUser(UserRequest user);
 

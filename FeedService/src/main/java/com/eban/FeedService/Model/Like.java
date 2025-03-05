@@ -21,16 +21,16 @@ public class Like {
 
     @ManyToOne
     @JoinColumn(name = "feedId", referencedColumnName = "feedId", nullable = false)
-    private Feed feedId;  // Quan hệ với Feed
+    private Feed feed;
 
     @Column(name = "userId", nullable = false)
-    private String userId;  // Quan hệ với User
+    private String userId;
 
     public Like() {
     }
 
-    public Like(Feed feedId, String userId) {
-        this.feedId = feedId;
+    public Like(String userId, Feed feed) {
         this.userId = userId;
+        this.feed = feed;
     }
 }

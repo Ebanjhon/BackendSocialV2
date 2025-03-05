@@ -1,23 +1,19 @@
 package com.eban.FeedService.DTO;
 
-import lombok.Getter;
-import lombok.Setter;
-
 public class FeedRequest {
-    private String authorId;
     private String content;
+    private String feedId;
 
-    public FeedRequest(String authorId, String content) {
-        this.authorId = authorId;
+    public FeedRequest() {
+    }
+
+    public FeedRequest(String content, String feedId) {
         this.content = content;
+        this.feedId = feedId;
     }
 
-    public String getAuthorId() {
-        return authorId;
-    }
-
-    public void setAuthorId(String authorId) {
-        this.authorId = authorId;
+    public FeedRequest(String content) {
+        this.content = content;
     }
 
     public String getContent() {
@@ -27,4 +23,13 @@ public class FeedRequest {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public String getFeedId() {
+        return feedId;
+    }
+
+    public void setFeedId(String feedId) {
+        this.feedId = feedId;
+    }
+
 }

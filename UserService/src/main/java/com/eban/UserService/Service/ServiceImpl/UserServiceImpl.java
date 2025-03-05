@@ -2,6 +2,7 @@ package com.eban.UserService.Service.ServiceImpl;
 
 import com.eban.UserService.Config.ApiEndpoints;
 import com.eban.UserService.DTO.RegisterReq;
+import com.eban.UserService.DTO.UserDetailResponse;
 import com.eban.UserService.DTO.UserRequest;
 import com.eban.UserService.DTO.UserResponse;
 import com.eban.UserService.Model.User;
@@ -47,5 +48,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isEmailExist(String email) {
         return userRepo.existsByEmail(email);
+    }
+
+    @Override
+    public Optional<UserDetailResponse> GetUserDetailByUserName(String username) {
+        return userRepo.findUserDetailByUsername(username);
     }
 }

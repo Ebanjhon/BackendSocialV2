@@ -26,27 +26,18 @@ public class Profile {
     private String phoneNumber;
 
     @Column(nullable = true)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate birthDate;
-
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime dateJoid;
-
-    @PrePersist
-    protected void onCreate() {
-        this.dateJoid = LocalDateTime.now();
-    }
 
     public Profile() {
     }
 
-    public Profile(String userId, String bio, Gender gender, String phoneNumber, LocalDate birthDate, LocalDateTime dateJoid) {
+    public Profile(String userId, String bio, Gender gender, String phoneNumber, LocalDate birthDate) {
         this.userId = userId;
         this.bio = bio;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
         this.birthDate = birthDate;
-        this.dateJoid = dateJoid;
     }
 
     public String getUserId() {
@@ -89,11 +80,4 @@ public class Profile {
         this.birthDate = birthDate;
     }
 
-    public LocalDateTime getDateJoid() {
-        return dateJoid;
-    }
-
-    public void setDateJoid(LocalDateTime dateJoid) {
-        this.dateJoid = dateJoid;
-    }
 }
