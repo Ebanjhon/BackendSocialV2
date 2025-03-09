@@ -28,6 +28,11 @@ public class TokenFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+        String path = exchange.getRequest().getURI().getPath();
+        if (path.equals("/api/auth/login")) {
+            return chain.filter(exchange);
+        }
+
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -45,15 +50,16 @@ public class TokenFilter implements WebFilter {
 
                         Authentication authentication = new UsernamePasswordAuthenticationToken(
                                 userDetails, null, userDetails.getAuthorities());
-                        logger.info("✅ User xác thực: {}, Role: {}", userResponse.getUsername(), userResponse.getRole());
+                        logger.info("✅ User xác thực: {}, Role: {}", userResponse.getUsername(),
+                                userResponse.getRole());
 
                         ServerWebExchange modifiedExchange = exchange.mutate()
                                 .request(builder -> builder
                                         .header("X-User-Id", userResponse.getUserId())
                                         .header("X-Username", userResponse.getUsername())
                                         .header("X-Email", userResponse.getEmail())
-                                        .header("X-Role", userResponse.getRole())
-                                ).build();
+                                        .header("X-Role", userResponse.getRole()))
+                                .build();
 
                         return chain.filter(modifiedExchange)
                                 .contextWrite(ReactiveSecurityContextHolder.withAuthentication(authentication));

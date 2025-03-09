@@ -2,11 +2,11 @@ package com.eban.AuthService.DTO;
 
 public class LoginRsp {
     private String username;
-    private String pasSword;
-    
+    private String password;
+
     public LoginRsp(String username, String pasSword) {
         this.username = username;
-        this.pasSword = pasSword;
+        this.password = pasSword;
     }
 
     public String getUsername() {
@@ -17,11 +17,11 @@ public class LoginRsp {
         this.username = username;
     }
 
-    public String getPasSword() {
-        return pasSword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasSword(String pasSword) {
-        this.pasSword = pasSword;
+    public void setPassword(String pasSword) {
+        this.password = pasSword;
     }
 }

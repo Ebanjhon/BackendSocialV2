@@ -16,4 +16,9 @@ http://localhost:15672
 
 mvn spring-boot:run
 
+build va khoi dong :docker-compose up --build -d
+
 sinh file proto: mvn clean compile
+
+lenh check port co dang chay: netstat -ano | findstr :'poorrrt'
+lenh tat port do ket thuc: taskkill /F /PID <PID>

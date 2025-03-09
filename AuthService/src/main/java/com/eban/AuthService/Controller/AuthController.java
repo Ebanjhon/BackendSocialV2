@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/auth")
 public class AuthController {
     @Autowired
@@ -35,11 +36,11 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<Object> Register(@RequestBody User user) {
-        if(userService.isUserNameExist(user.getUsername()) || userService.isEmailExist(user.getEmail())){
+        if (userService.isUserNameExist(user.getUsername()) || userService.isEmailExist(user.getEmail())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Thông tin đăng ký không hợp lệ!");
         }
         User userCreated = userService.saveUser(user);
-        if(userCreated == null){
+        if (userCreated == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lỗi khi tạo tài khoản!");
         }
         return ResponseEntity.status(HttpStatus.OK).body(userCreated.getUserId());
@@ -47,11 +48,10 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Object> authenticateUser(@RequestBody LoginRsp data) {
-        Optional<User> user = userService.authenticate(data.getUsername(), data.getPasSword());
+        Optional<User> user = userService.authenticate(data.getUsername(), data.getPassword());
         if (user.isPresent()) {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(data.getUsername(), data.getPasSword())
-            );
+                    new UsernamePasswordAuthenticationToken(data.getUsername(), data.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } else {
             return ResponseEntity.status(401).body("Sai mật khẩu hoặc tài khoản!");
@@ -69,8 +69,7 @@ public class AuthController {
         try {
             String result = jwtTokenFilter.validateToken(token);
             Optional<User> user = userService.GetUserByUserName(result);
-            if(user.isPresent())
-            {
+            if (user.isPresent()) {
                 return ResponseEntity.ok(user);
             }
             return ResponseEntity.noContent().build();
