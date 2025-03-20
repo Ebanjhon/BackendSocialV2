@@ -1,7 +1,5 @@
 package com.eban.MediaService.model;
 
-import java.util.UUID;
-
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -41,7 +39,7 @@ public class Media {
     @Column(name = "media_type", nullable = false)
     private TypeMedia mediaType;
 
-    public Media( String url, String postId, int width, int height, TypeMedia mediaType) {
+    public Media(String url, String postId, int width, int height, TypeMedia mediaType) {
         this.url = url;
         this.postId = postId;
         this.width = width;

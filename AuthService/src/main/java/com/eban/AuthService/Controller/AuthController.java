@@ -2,6 +2,7 @@ package com.eban.AuthService.Controller;
 
 import com.eban.AuthService.AuthConfig.JwtTokenFilter;
 import com.eban.AuthService.DTO.LoginRsp;
+import com.eban.AuthService.DTO.TokenResponse;
 import com.eban.AuthService.Service.ServiceImpl.UserServiceImpl;
 import com.eban.AuthService.model.User;
 
@@ -54,9 +55,10 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(data.getUsername(), data.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } else {
-            return ResponseEntity.status(401).body("Sai mật khẩu hoặc tài khoản!");
+            return ResponseEntity.status(401).body("Mật khẩu hoặc tài khoản không chính xác!");
         }
-        String token = jwtTokenFilter.generateToken(data.getUsername(), user.get().getRole());
+        String t = jwtTokenFilter.generateToken(data.getUsername(), user.get().getRole());
+        TokenResponse token = new TokenResponse(t);
         return ResponseEntity.ok(token);
     }
 

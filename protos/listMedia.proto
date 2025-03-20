@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package media;
+
+option java_multiple_files = true;
+option java_package = "com.eban.media.grpc";
+option java_outer_classname = "MediaProto";
+
+message MediaRequest {
+  repeated string feedIds = 1;
+}
+
+message MediaResponse {
+  message Media {
+    string id = 1;
+    string url = 2;
+    int32 width = 3;
+    int32 height = 4;
+    string type = 5;
+  }
+  repeated Media mediaResoure = 1;
+}
+
+service MediaService {
+  rpc GetMediaByFeedId (MediaRequest) returns (MediaResponse);
+}

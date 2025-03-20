@@ -9,7 +9,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -89,4 +88,13 @@ public class FeedController {
         Page<Feed> feeds = (Page<Feed>) feedService.getListFeedByAuthor(authorId, page, size);
         return ResponseEntity.ok(feeds);
     }
+
+    // @GetMapping("/listFeed")
+    // public ResponseEntity<Object> getListFeed(
+    // @RequestHeader Map<String, String> headers,
+    // @RequestParam(defaultValue = "0") int page,
+    // @RequestParam(defaultValue = "10") int size) {
+
+    // return ResponseEntity.ok(null);
+    // }
 }
