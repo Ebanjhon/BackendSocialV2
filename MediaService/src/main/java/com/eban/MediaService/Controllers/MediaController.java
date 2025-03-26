@@ -1,6 +1,8 @@
 package com.eban.MediaService.Controllers;
 
+import com.eban.MediaService.DTO.MediaListResource;
 import com.eban.MediaService.MinioService.MinioService;
+import com.eban.MediaService.Service.MediaService;
 import com.eban.MediaService.Service.ServiceImpl.ImageResizeService;
 import com.eban.MediaService.Service.ServiceImpl.MediaServiceImpl;
 import com.eban.MediaService.model.Media;
@@ -50,6 +52,17 @@ public class MediaController {
     public ResponseEntity<List<Media>> getlistMediaByFeedId(@RequestParam String feedId) {
         List<Media> listMedia = mediaService.getListByPostId(feedId);
         return ResponseEntity.status(HttpStatus.OK).body(listMedia);
+    }
+
+    @GetMapping("/resource")
+    public ResponseEntity<Object> getListResourceMedia(){
+        List<String> feedIds = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
+        try {
+            List<MediaListResource> result = mediaService.getListResource(feedIds);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.OK).body(e);
+        }
     }
 
     @PostMapping("/upload")
