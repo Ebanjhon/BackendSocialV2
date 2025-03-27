@@ -1,11 +1,17 @@
 package com.eban.FeedService.Controller;
 
 import com.eban.FeedService.DTO.FeedRequest;
+import com.eban.FeedService.DTO.MediaResource;
 import com.eban.FeedService.Model.Feed;
 import com.eban.FeedService.Service.FeedService;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.eban.FeedService.Service.ServiceImpl.DemoGrpc;
+import com.eban.FeedService.Service.ServiceImpl.ListMediaResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -15,6 +21,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/feed")
 public class FeedController {
+
+    private final DemoGrpc demoGrpc;
+    private final ListMediaResource listMediaResource;
+    public FeedController(DemoGrpc demoGrpc, ListMediaResource listMediaResource) {
+        this.demoGrpc = demoGrpc;
+        this.listMediaResource = listMediaResource;
+    }
 
     @Autowired
     private FeedService feedService;
@@ -89,12 +102,15 @@ public class FeedController {
         return ResponseEntity.ok(feeds);
     }
 
-    // @GetMapping("/listFeed")
-    // public ResponseEntity<Object> getListFeed(
-    // @RequestHeader Map<String, String> headers,
-    // @RequestParam(defaultValue = "0") int page,
-    // @RequestParam(defaultValue = "10") int size) {
+    @GetMapping("/resource")
+    public ResponseEntity<Object> getMediaResources(@RequestBody List<String> feedIds) {
+        List<MediaResource> result = listMediaResource.getMediaForFeeds(feedIds);
+        return ResponseEntity.ok(result);
+    }
 
-    // return ResponseEntity.ok(null);
-    // }
+    @GetMapping("/demo")
+    public ResponseEntity<String> demoMessProto(){
+        String result = demoGrpc.sendMessDemo("Jhon");
+        return ResponseEntity.ok(result);
+    }
 }

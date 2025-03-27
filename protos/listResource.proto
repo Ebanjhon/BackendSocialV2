@@ -1,33 +1,32 @@
 syntax = "proto3";
 
-package listResource;
+package com.example.grpc;
 
+option java_package = "com.example.grpc";
 option java_multiple_files = true;
-option java_package = "com.example.media.proto";
-option java_outer_classname = "MediaProto";
-
-message Media {
-  string media_id = 1;
-  string url = 2;
-  string post_id = 3;
-  int32 width = 4;
-  int32 height = 5;
-  string media_type = 6;
-}
-
-message MediaListResource {
-  string feed_id = 1;
-  repeated Media resource = 2;
-}
-
-message GetMediaRequest {
-  repeated string feed_ids = 1;
-}
-
-message GetMediaResponse {
-  repeated MediaListResource media_list = 1;
-}
 
 service MediaService {
-  rpc GetListResource (GetMediaRequest) returns (GetMediaResponse);
+    rpc GetMediaByFeedIds (MediaRequest) returns (MediaResponse);
+}
+
+message MediaRequest {
+    repeated string feedIds = 1; // Danh sách feedId cần lấy dữ liệu
+}
+
+message MediaResponse {
+    repeated FeedMedia feedMediaList = 1; // Danh sách dữ liệu trả về
+}
+
+message FeedMedia {
+    string feedId = 1; // ID của bài post
+    repeated MediaResource resource = 2; // Danh sách ảnh/video
+}
+
+message MediaResource {
+    string mediaId = 1;
+    string url = 2;
+    string postId = 3;
+    int32 width = 4;
+    int32 height = 5;
+    string mediaType = 6; // IMAGE, VIDEO, etc.
 }
