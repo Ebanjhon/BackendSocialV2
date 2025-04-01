@@ -3,10 +3,14 @@ package com.eban.AuthService.Controller;
 import com.eban.AuthService.AuthConfig.JwtTokenFilter;
 import com.eban.AuthService.DTO.LoginRsp;
 import com.eban.AuthService.DTO.TokenResponse;
+import com.eban.AuthService.DTO.VerifyOTP;
+import com.eban.AuthService.Service.ServiceImpl.MailService;
+import com.eban.AuthService.Service.ServiceImpl.OTPService;
 import com.eban.AuthService.Service.ServiceImpl.UserServiceImpl;
 import com.eban.AuthService.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +32,8 @@ public class AuthController {
     private UserServiceImpl userService;
     @Autowired
     private JwtTokenFilter jwtTokenFilter;
+    @Autowired
+    private OTPService otpService;
 
     @GetMapping
     public ResponseEntity<Object> getUser(@RequestParam String username) {
@@ -77,6 +83,60 @@ public class AuthController {
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.noContent().build();
+        }
+    }
+
+    @PostMapping("/generate")
+    public ResponseEntity<String> generateOTP(@RequestBody String userId) {
+        try {
+            String otp = otpService.saveOTP(userId);
+            return ResponseEntity.status(HttpStatus.OK).body("OTP: " + otp);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
+        }
+
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<String> verifyOTP(@RequestBody VerifyOTP data) {
+        Boolean result = otpService.getOTP(data);
+        if (result) {
+            otpService.deleteOTP(data.getUserId());
+            return ResponseEntity.status(HttpStatus.OK).body("Auth OTP Successful!");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body("OTP doesn't match!");
+        }
+    }
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
+    @GetMapping("/test-redis")
+    public String testRedisConnection() {
+        try {
+            String response = redisTemplate.getConnectionFactory().getConnection().ping();
+            if ("PONG".equals(response)) {
+                return "Kết nối Redis thành công!";
+            } else {
+                return "Lỗi kết nối Redis: " + response;
+            }
+        } catch (Exception e) {
+            return "Không thể kết nối Redis: " + e;
+        }
+    }
+
+//    test email
+    @Autowired
+    private MailService mailService;
+
+    @GetMapping("/send-mail")
+    public ResponseEntity<String> testSendEmail(){
+        try{
+            String otp = "123456";
+            mailService.sendOTP("ebanjhony202@gmail.com", "Xác nhận mã OTP", otp);
+            return ResponseEntity.status(HttpStatus.OK).body(otp);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 }

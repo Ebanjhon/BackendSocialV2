@@ -22,3 +22,5 @@ sinh file proto: mvn clean compile
 
 lenh check port co dang chay: netstat -ano | findstr :'poorrrt'
 lenh tat port do ket thuc: taskkill /F /PID <PID>
+
+build lai 1 service : docker-compose up --build -d auth-service
