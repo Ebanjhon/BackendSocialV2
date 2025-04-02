@@ -4,6 +4,7 @@ import com.eban.AuthService.AuthConfig.JwtTokenFilter;
 import com.eban.AuthService.DTO.LoginRsp;
 import com.eban.AuthService.DTO.TokenResponse;
 import com.eban.AuthService.DTO.VerifyOTP;
+import com.eban.AuthService.Service.ServiceImpl.ActiveUserService;
 import com.eban.AuthService.Service.ServiceImpl.MailService;
 import com.eban.AuthService.Service.ServiceImpl.OTPService;
 import com.eban.AuthService.Service.ServiceImpl.UserServiceImpl;
@@ -34,6 +35,8 @@ public class AuthController {
     private JwtTokenFilter jwtTokenFilter;
     @Autowired
     private OTPService otpService;
+    @Autowired
+    private ActiveUserService activeUserService;
 
     @GetMapping
     public ResponseEntity<Object> getUser(@RequestParam String username) {
@@ -137,6 +140,16 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.OK).body(otp);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/active-user")
+    public ResponseEntity<String> activeUserAccount(){
+        try{
+            Boolean result = activeUserService.activeAccountUser("123456789");
+            return ResponseEntity.status(HttpStatus.OK).body("Success!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Fail!");
         }
     }
 }

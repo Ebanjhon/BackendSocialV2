@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package user;
+
+service ActiveUserService {
+  rpc ActiveUser (ActiveUserRequest) returns (ActiveUserResponse);
+}
+
+message ActiveUserRequest {
+  string userId = 1;
+}
+
+message ActiveUserResponse {
+  bool success = 1;
+}
