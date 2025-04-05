@@ -31,7 +31,6 @@ services:
     build: ./UserService
     ports:
       - "8083:8083"
-      # - "50051:50051" # host service proto
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/user_db
       SPRING_DATASOURCE_USERNAME: postgres

@@ -54,4 +54,12 @@ public class UserServiceImpl implements UserService {
     public Optional<UserDetailResponse> GetUserDetailByUserName(String username) {
         return userRepo.findUserDetailByUsername(username);
     }
+
+    @Override
+    public void activeUserAccount(String userId) {
+        User user = userRepo.findByUserId(userId);
+        System.err.println("oke nhe");
+        user.setActive(true);
+        userRepo.save(user);
+    }
 }

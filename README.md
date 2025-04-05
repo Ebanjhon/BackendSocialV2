@@ -1,26 +1,20 @@
-docker build -t auth-service .
-build image: docker build -t 'yourname' .
-build container: docker-compose build
-chay container moi: docker-compose up -d
-check: docker ps
-xoa toaà bô image : docker rmi $(docker images -q)
-B1 clean and build packet tạo file jar: mvn clean package họac mvn clean install -DskipTests (bỏ qua téet)
-B2 docker-compose build
-B3 chay container moi hoăc sua file: docker-compose up -d
+To run these services follow this coment:
+run docker compose file: docker-compose up --build -d
+the coment will build and run.
 
-cach pỏot chạy
-"HOST_PORT:CONTAINER_PORT"
+To end services: docker-compose down
 
-chạy rabbitMQ: docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 -e RABBITMQ_DEFAULT_USER=user -e RABBITMQ_DEFAULT_PASS=password rabbitmq:3-management
-http://localhost:15672
+how to delete docker images: docker rmi $(docker images -q)
 
-mvn spring-boot:run
+To build once project: mvn clean package họac mvn clean install -DskipTests (for skip test).
+run project: mvn spring-boot:run
 
-build va khoi dong :docker-compose up --build -d
+How to generate packet file proto: mvn clean compile
 
-sinh file proto: mvn clean compile
+the way port run: "HOST_PORT:CONTAINER_PORT"
 
-lenh check port co dang chay: netstat -ano | findstr :'poorrrt'
-lenh tat port do ket thuc: taskkill /F /PID <PID>
+the cmt show ports running: netstat -ano | findstr :'poorrrt'
 
-build lai 1 service : docker-compose up --build -d auth-service
+To end this port: taskkill /F /PID <PID>
+
+build single service : docker-compose up --build -d auth-service

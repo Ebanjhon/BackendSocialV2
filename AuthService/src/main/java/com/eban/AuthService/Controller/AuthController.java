@@ -3,7 +3,6 @@ package com.eban.AuthService.Controller;
 import com.eban.AuthService.AuthConfig.JwtTokenFilter;
 import com.eban.AuthService.DTO.LoginRsp;
 import com.eban.AuthService.DTO.TokenResponse;
-import com.eban.AuthService.DTO.VerifyOTP;
 import com.eban.AuthService.Service.ServiceImpl.ActiveUserService;
 import com.eban.AuthService.Service.ServiceImpl.MailService;
 import com.eban.AuthService.Service.ServiceImpl.OTPService;
@@ -11,7 +10,6 @@ import com.eban.AuthService.Service.ServiceImpl.UserServiceImpl;
 import com.eban.AuthService.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -89,67 +88,36 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/generate")
-    public ResponseEntity<String> generateOTP(@RequestBody String userId) {
+    @PostMapping("/send-otp")
+    public ResponseEntity<String> generateOTP(@RequestHeader Map<String, String> headers) {
         try {
+            String email = headers.get("x-email");
+            String userId = headers.get("x-user-id");
             String otp = otpService.saveOTP(userId);
+            mailService.sendOTP(email, "Xác nhận mã OTP", otp);
             return ResponseEntity.status(HttpStatus.OK).body("OTP: " + otp);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
         }
-
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<String> verifyOTP(@RequestBody VerifyOTP data) {
-        Boolean result = otpService.getOTP(data);
+    public ResponseEntity<String> verifyOTP(@RequestHeader Map<String, String> headers, @RequestBody String otp) {
+        String userId = headers.get("x-user-id");
+        Boolean result = otpService.getOTP(otp, userId);
         if (result) {
-            otpService.deleteOTP(data.getUserId());
-            return ResponseEntity.status(HttpStatus.OK).body("Auth OTP Successful!");
-        } else {
-            return ResponseEntity.status(HttpStatus.OK).body("OTP doesn't match!");
-        }
-    }
-
-    @Autowired
-    private StringRedisTemplate redisTemplate;
-
-    @GetMapping("/test-redis")
-    public String testRedisConnection() {
-        try {
-            String response = redisTemplate.getConnectionFactory().getConnection().ping();
-            if ("PONG".equals(response)) {
-                return "Kết nối Redis thành công!";
-            } else {
-                return "Lỗi kết nối Redis: " + response;
+            Boolean isActiveSuccess = activeUserService.activeAccountUser(userId);
+            otpService.deleteOTP(userId);
+            if (isActiveSuccess) {
+                return ResponseEntity.status(HttpStatus.OK).body("Verify OTP Successful!");
             }
-        } catch (Exception e) {
-            return "Không thể kết nối Redis: " + e;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("OTP IS Over Time Out!");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("OTP doesn't match!");
         }
     }
 
-//    test email
     @Autowired
     private MailService mailService;
 
-    @GetMapping("/send-mail")
-    public ResponseEntity<String> testSendEmail(){
-        try{
-            String otp = "123456";
-            mailService.sendOTP("ebanjhony202@gmail.com", "Xác nhận mã OTP", otp);
-            return ResponseEntity.status(HttpStatus.OK).body(otp);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-
-    @GetMapping("/active-user")
-    public ResponseEntity<String> activeUserAccount(){
-        try{
-            Boolean result = activeUserService.activeAccountUser("123456789");
-            return ResponseEntity.status(HttpStatus.OK).body("Success!");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Fail!");
-        }
-    }
 }

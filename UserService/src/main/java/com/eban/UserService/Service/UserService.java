@@ -19,4 +19,6 @@ public interface UserService {
     boolean isUserNameExist(String username);
 
     boolean isEmailExist(String email);
+
+    void activeUserAccount(String userId);
 }

@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
+
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsername(String username);
@@ -34,4 +34,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "FROM User u LEFT JOIN Profile p ON u.userId = p.userId " +
             "WHERE u.username = :username")
     Optional<UserDetailResponse> findUserDetailByUsername(@Param("username") String username);
+
+    User findByUserId(String userId);
 }

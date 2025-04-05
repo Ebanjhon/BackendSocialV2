@@ -53,6 +53,8 @@ public class TokenFilter implements WebFilter {
                         logger.info("✅ User xác thực: {}, Role: {}", userResponse.getUsername(),
                                 userResponse.getRole());
 
+                        System.out.println(userResponse);
+
                         ServerWebExchange modifiedExchange = exchange.mutate()
                                 .request(builder -> builder
                                         .header("X-User-Id", userResponse.getUserId())

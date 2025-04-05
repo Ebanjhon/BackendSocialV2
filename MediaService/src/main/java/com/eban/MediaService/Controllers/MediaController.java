@@ -2,13 +2,10 @@ package com.eban.MediaService.Controllers;
 
 import com.eban.MediaService.DTO.MediaListResource;
 import com.eban.MediaService.MinioService.MinioService;
-import com.eban.MediaService.Service.MediaService;
 import com.eban.MediaService.Service.ServiceImpl.ImageResizeService;
 import com.eban.MediaService.Service.ServiceImpl.MediaServiceImpl;
 import com.eban.MediaService.model.Media;
 import com.eban.MediaService.model.TypeMedia;
-
-import jakarta.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,7 +52,7 @@ public class MediaController {
     }
 
     @GetMapping("/resource")
-    public ResponseEntity<Object> getListResourceMedia(){
+    public ResponseEntity<Object> getListResourceMedia() {
         List<String> feedIds = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
         try {
             List<MediaListResource> result = mediaService.getListResource(feedIds);
