@@ -5,8 +5,6 @@ import com.eban.FeedService.DTO.MediaResource;
 import com.eban.FeedService.Model.Feed;
 import com.eban.FeedService.Service.FeedService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +22,7 @@ public class FeedController {
 
     private final DemoGrpc demoGrpc;
     private final ListMediaResource listMediaResource;
+
     public FeedController(DemoGrpc demoGrpc, ListMediaResource listMediaResource) {
         this.demoGrpc = demoGrpc;
         this.listMediaResource = listMediaResource;
@@ -109,7 +108,7 @@ public class FeedController {
     }
 
     @GetMapping("/demo")
-    public ResponseEntity<String> demoMessProto(){
+    public ResponseEntity<String> demoMessProto() {
         String result = demoGrpc.sendMessDemo("Jhon");
         return ResponseEntity.ok(result);
     }

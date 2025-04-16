@@ -2,6 +2,7 @@ package com.eban.UserService.Service.ServiceImpl;
 
 import com.eban.UserService.Config.ApiEndpoints;
 import com.eban.UserService.DTO.RegisterReq;
+import com.eban.UserService.DTO.SreachUser;
 import com.eban.UserService.DTO.UserDetailResponse;
 import com.eban.UserService.DTO.UserRequest;
 import com.eban.UserService.DTO.UserResponse;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -61,5 +63,10 @@ public class UserServiceImpl implements UserService {
         System.err.println("oke nhe");
         user.setActive(true);
         userRepo.save(user);
+    }
+
+    @Override
+    public List<SreachUser> getListUserByUserName(String username, String userId) {
+        return userRepo.searchUsersWithFollowStatus(username, userId);
     }
 }

@@ -1,10 +1,14 @@
 package com.eban.UserService.Controller;
 
+import com.eban.UserService.DTO.FollowRequest;
+import com.eban.UserService.DTO.SreachUser;
 import com.eban.UserService.DTO.UserDetailResponse;
 import com.eban.UserService.DTO.UserRequest;
 import com.eban.UserService.DTO.UserResponse;
+import com.eban.UserService.Model.Follow;
 import com.eban.UserService.Model.Profile;
 import com.eban.UserService.Model.User;
+import com.eban.UserService.Service.ServiceImpl.FollowServiceImpl;
 import com.eban.UserService.Service.ServiceImpl.ProfileServiceImpl;
 import com.eban.UserService.Service.ServiceImpl.UserServiceImpl;
 
@@ -13,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -24,6 +29,9 @@ public class UserController {
 
     @Autowired
     private ProfileServiceImpl profileService;
+
+    @Autowired
+    private FollowServiceImpl followService;
 
     @PostMapping
     public ResponseEntity<Object> saveUser(@RequestBody UserRequest user) {
@@ -69,6 +77,42 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Không tìm thấy user!");
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Object> searchAccount(@RequestHeader Map<String, String> headers,
+            @RequestParam String username) {
+        try {
+            String userId = headers.get("x-user-id");
+            List<SreachUser> results = userService.getListUserByUserName(username, userId);
+            return ResponseEntity.status(HttpStatus.OK).body(results);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Không tìm thấy users!");
+        }
+    }
+
+    @PostMapping("/follow")
+    public ResponseEntity<Object> follow(@RequestHeader Map<String, String> headers,
+            @RequestBody FollowRequest userTargetId) {
+        try {
+            String userId = headers.get("x-user-id");
+            Follow f = followService.follow(userId, userTargetId.getUserTargetId());
+            return ResponseEntity.status(HttpStatus.OK).body(f);
+        } catch (Exception error) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+    }
+
+    @DeleteMapping("/follow")
+    public ResponseEntity<Object> unFollow(@RequestHeader Map<String, String> headers,
+            @RequestBody FollowRequest userTargetId) {
+        try {
+            String userId = headers.get("x-user-id");
+            followService.unFollow(userId, userTargetId.getUserTargetId());
+            return ResponseEntity.status(HttpStatus.OK).body("Hủy theo dõi thành công");
+        } catch (Exception error) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
     }
 

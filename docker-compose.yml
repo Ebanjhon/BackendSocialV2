@@ -39,50 +39,50 @@ services:
     networks:
       - app_network
 
-  # feed-service:
-  #   build: ./FeedService
-  #   ports:
-  #     - "8082:8082"
-  #   environment:
-  #     SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/feed_db
-  #     SPRING_DATASOURCE_USERNAME: postgres
-  #     SPRING_DATASOURCE_PASSWORD: 123456
-  #     SPRING_JPA_HIBERNATE_DDL_AUTO: update
-  #   networks:
-  #     - app_network
+  feed-service:
+    build: ./FeedService
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/feed_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 123456
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    networks:
+      - app_network
 
-  # media-service:
-  #   build: ./MediaService
-  #   ports:
-  #     - "8084:8084"
-  #   depends_on:
-  #     minio:
-  #       condition: service_started
-  #   environment:
-  #     SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/media_db
-  #     SPRING_DATASOURCE_USERNAME: postgres
-  #     SPRING_DATASOURCE_PASSWORD: 123456
-  #     SPRING_JPA_HIBERNATE_DDL_AUTO: update
-  #     MINIO_URL: http://minio:9000
-  #     MINIO_ACCESS_KEY: minioeban
-  #     MINIO_SECRET_KEY: minioeban
-  #   networks:
-  #     - app_network
+  media-service:
+    build: ./MediaService
+    ports:
+      - "8084:8084"
+    depends_on:
+      minio:
+        condition: service_started
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/media_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 123456
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      MINIO_URL: http://minio:9000
+      MINIO_ACCESS_KEY: minioeban
+      MINIO_SECRET_KEY: minioeban
+    networks:
+      - app_network
 
-  # minio:
-  #   image: minio/minio
-  #   container_name: minio
-  #   ports:
-  #     - "9000:9000"
-  #     - "9001:9001"
-  #   environment:
-  #     MINIO_ROOT_USER: minioeban
-  #     MINIO_ROOT_PASSWORD: minioeban
-  #   volumes:
-  #     - minio_data:/data
-  #   command: server --console-address ":9001" /data
-  #   networks:
-  #     - app_network
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioeban
+      MINIO_ROOT_PASSWORD: minioeban
+    volumes:
+      - minio_data:/data
+    command: server --console-address ":9001" /data
+    networks:
+      - app_network
 
 volumes:
   minio_data:
