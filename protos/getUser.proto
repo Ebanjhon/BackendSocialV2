@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package user;
+
+option java_package = "com.eban.user.grpc";
+option java_multiple_files = true;
+
+// Request: lấy thông tin user theo userId
+message GetUserByIdRequest {
+  string user_id = 1;
+}
+
+// Response: chỉ chứa các trường trong UserInfo DTO
+message UserInfoResponse {
+  string user_id = 1;
+  string username = 2;
+  string firstname = 3;
+  string lastname = 4;
+  string avatar = 5;
+}
+
+// Service khai báo gRPC
+service GetUserService {
+  rpc GetUserById(GetUserByIdRequest) returns (UserInfoResponse);
+}

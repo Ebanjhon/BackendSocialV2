@@ -14,6 +14,8 @@ import java.util.Optional;
 public interface UserService {
     Optional<UserResponse> GetUserByUserName(String username);
 
+    Optional<User> GetUserByUserId(String userId);
+
     Optional<UserDetailResponse> GetUserDetailByUserName(String username);
 
     User saveUser(UserRequest user);

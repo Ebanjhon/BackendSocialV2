@@ -1,10 +1,6 @@
 package com.eban.UserService.Controller;
 
-import com.eban.UserService.DTO.FollowRequest;
-import com.eban.UserService.DTO.SreachUser;
-import com.eban.UserService.DTO.UserDetailResponse;
-import com.eban.UserService.DTO.UserRequest;
-import com.eban.UserService.DTO.UserResponse;
+import com.eban.UserService.DTO.*;
 import com.eban.UserService.Model.Follow;
 import com.eban.UserService.Model.Profile;
 import com.eban.UserService.Model.User;
@@ -131,4 +127,13 @@ public class UserController {
     // return ResponseEntity.status(HttpStatus.OK).body(response);
     // }
 
+    @GetMapping("/id")
+    public ResponseEntity<Object> getUserById(@RequestBody String id) {
+        try {
+            Optional<User> u = userService.GetUserByUserId(id);
+            return ResponseEntity.status(HttpStatus.OK).body(u);
+        } catch (Exception error) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+    }
 }

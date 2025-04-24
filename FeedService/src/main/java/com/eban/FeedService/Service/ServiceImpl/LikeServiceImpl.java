@@ -17,4 +17,14 @@ public class LikeServiceImpl implements LikeService {
         return likeRepository.save(like);
     }
 
+    @Override
+    public Boolean isLikeFeed(String feedId, String userId) {
+        return likeRepository.isUserLikeFeed(feedId, userId);
+    }
+
+    @Override
+    public int totalLike(String feedId) {
+        return likeRepository.countByFeedId(feedId);
+    }
+
 }

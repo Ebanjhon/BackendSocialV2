@@ -1,7 +1,5 @@
 package com.eban.FeedService.Model;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -27,7 +25,6 @@ public class Feed {
     @CreationTimestamp
     @Column(name = "created_day", nullable = false, updatable = false)
     private LocalDateTime createDay;
-
 
     public Feed() {
 

@@ -37,7 +37,20 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "WHERE u.username = :username")
     Optional<UserDetailResponse> findUserDetailByUsername(@Param("username") String username);
 
-    User findByUserId(String userId);
+    @Query("""
+    SELECT new com.eban.UserService.DTO.UserResponse(
+        u.userId, u.username, u.firstname, u.lastname,
+        u.email, u.avatar, u.active
+    )
+    FROM User u
+    WHERE u.userId = :userId
+    """)
+    Optional<User> getUserByUserId(@Param("userId") String userId);
+
+    @Query("SELECT u FROM User u WHERE u.userId = :userId")
+    Optional<User> findByUserId(@Param("userId") String userId);
+
+//    User findByUserId(String userId);
 
     @Query("SELECT new com.eban.UserService.DTO.SreachUser(" +
             "u.userId, u.username, u.firstname, u.lastname, u.avatar, " +
@@ -47,4 +60,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "WHERE u.username LIKE %:username% AND u.userId <> :currentUserId")
     List<SreachUser> searchUsersWithFollowStatus(@Param("username") String username,
             @Param("currentUserId") String currentUserId);
+
 }

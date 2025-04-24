@@ -35,7 +35,8 @@ public class MinioService {
                             .stream(inputStream, file.getSize(), -1)
                             .contentType(file.getContentType())
                             .build());
-            return minioUrl.replace("http://minio:9000", "http://localhost:9000")
+//            return minioUrl.replace("http://minio:9000", "http://localhost:9000")
+            return minioUrl.replace("http://minio:9000", ":9000")
                     + "/" + bucketName + "/" + fileName;
         } catch (Exception e) {
             throw new RuntimeException(e);

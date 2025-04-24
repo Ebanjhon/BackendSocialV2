@@ -2,13 +2,14 @@ package com.eban.FeedService.Controller;
 
 import com.eban.FeedService.DTO.FeedRequest;
 import com.eban.FeedService.DTO.MediaResource;
+import com.eban.FeedService.DTO.UserInfo;
 import com.eban.FeedService.Model.Feed;
 import com.eban.FeedService.Service.FeedService;
 
 import java.util.List;
 import java.util.Map;
 
-import com.eban.FeedService.Service.ServiceImpl.DemoGrpc;
+import com.eban.FeedService.Service.ServiceImpl.GetUserGrpc;
 import com.eban.FeedService.Service.ServiceImpl.ListMediaResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,13 +21,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/feed")
 public class FeedController {
 
-    private final DemoGrpc demoGrpc;
     private final ListMediaResource listMediaResource;
 
-    public FeedController(DemoGrpc demoGrpc, ListMediaResource listMediaResource) {
-        this.demoGrpc = demoGrpc;
+    public FeedController(ListMediaResource listMediaResource) {
         this.listMediaResource = listMediaResource;
     }
+
+    @Autowired
+    private GetUserGrpc userGrpc;
 
     @Autowired
     private FeedService feedService;
@@ -103,13 +105,29 @@ public class FeedController {
 
     @GetMapping("/resource")
     public ResponseEntity<Object> getMediaResources(@RequestBody List<String> feedIds) {
-        List<MediaResource> result = listMediaResource.getMediaForFeeds(feedIds);
+        List<MediaResource> result = listMediaResource.getMediaForFeeds(feedIds, "");
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/demo")
-    public ResponseEntity<String> demoMessProto() {
-        String result = demoGrpc.sendMessDemo("Jhon");
+    // get list for home
+    @GetMapping("/search")
+    public ResponseEntity<Object> getFeedList(
+            @RequestHeader Map<String, String> headers,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        String userId = headers.get("x-user-id");
+        List<String> feedIds = feedService.getListFeed(page, size).getContent();
+        List<MediaResource> result = listMediaResource.getMediaForFeeds(feedIds, userId);
         return ResponseEntity.ok(result);
     }
+
+//    @GetMapping("/user")
+//    public ResponseEntity<?> getUserById(@RequestParam String userId) {
+//        UserInfo user = userGrpc.getUserById(userId);
+//        if (user != null) {
+//            return ResponseEntity.status(HttpStatus.OK).body(user);
+//        } else {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy user với ID: " + userId);
+//        }
+//    }
 }

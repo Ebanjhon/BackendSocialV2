@@ -23,4 +23,7 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
     void deleteFeedById(String feedId);
 
     Page<Feed> findByAuthorId(String authorId, Pageable pageable);
+
+    @Query("SELECT f.feedId FROM Feed f")
+    Page<String> findAllFeedIds(Pageable pageable);
 }

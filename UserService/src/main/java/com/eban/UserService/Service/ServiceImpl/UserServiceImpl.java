@@ -1,11 +1,7 @@
 package com.eban.UserService.Service.ServiceImpl;
 
 import com.eban.UserService.Config.ApiEndpoints;
-import com.eban.UserService.DTO.RegisterReq;
-import com.eban.UserService.DTO.SreachUser;
-import com.eban.UserService.DTO.UserDetailResponse;
-import com.eban.UserService.DTO.UserRequest;
-import com.eban.UserService.DTO.UserResponse;
+import com.eban.UserService.DTO.*;
 import com.eban.UserService.Model.User;
 import com.eban.UserService.Repository.UserRepository;
 import com.eban.UserService.Service.UserService;
@@ -25,8 +21,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Override
     public Optional<UserResponse> GetUserByUserName(String username) {
         return userRepo.findUserByUsername(username);
+    }
+
+    @Override
+    public Optional<User> GetUserByUserId(String userId) {
+        return userRepo.findByUserId(userId);
     }
 
     public User saveUser(UserRequest user) {
@@ -59,14 +61,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void activeUserAccount(String userId) {
-        User user = userRepo.findByUserId(userId);
-        System.err.println("oke nhe");
-        user.setActive(true);
-        userRepo.save(user);
+        Optional<User> user = userRepo.findByUserId(userId);
+        user.get().setActive(true);
+        userRepo.save(user.get());
     }
 
     @Override
     public List<SreachUser> getListUserByUserName(String username, String userId) {
         return userRepo.searchUsersWithFollowStatus(username, userId);
     }
+
 }

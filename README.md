@@ -6,7 +6,7 @@ To end services: docker-compose down
 
 how to delete docker images: docker rmi $(docker images -q)
 
-To build once project: mvn clean package họac mvn clean install -DskipTests (for skip test).
+To build once project: mvn clean package / mvn clean install -DskipTests (for skip test).
 run project: mvn spring-boot:run
 
 How to generate packet file proto: mvn clean compile
