@@ -28,6 +28,9 @@ public class User {
     @Column(nullable = true)
     private String avatar;
 
+    @Column(nullable = true)
+    private String cover;
+
     @Column(nullable = false)
     private boolean active = false;
 
@@ -104,5 +107,21 @@ public class User {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public LocalDateTime getDateJoid() {
+        return dateJoid;
+    }
+
+    public void setDateJoid(LocalDateTime dateJoid) {
+        this.dateJoid = dateJoid;
     }
 }

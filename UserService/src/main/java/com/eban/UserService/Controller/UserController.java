@@ -127,10 +127,20 @@ public class UserController {
     // return ResponseEntity.status(HttpStatus.OK).body(response);
     // }
 
-    @GetMapping("/id")
-    public ResponseEntity<Object> getUserById(@RequestBody String id) {
+//    @GetMapping("/id")
+//    public ResponseEntity<Object> getUserById(@RequestBody String id) {
+//        try {
+//            Optional<User> u = userService.GetUserByUserId(id);
+//            return ResponseEntity.status(HttpStatus.OK).body(u);
+//        } catch (Exception error) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+//        }
+//    }
+
+    @PutMapping
+    public ResponseEntity<Object> getUserById(@RequestBody UpdateUser user) {
         try {
-            Optional<User> u = userService.GetUserByUserId(id);
+            User u = userService.updateUser(user);
             return ResponseEntity.status(HttpStatus.OK).body(u);
         } catch (Exception error) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);

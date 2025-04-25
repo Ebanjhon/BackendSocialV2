@@ -8,4 +8,6 @@ public interface LikeService {
     Boolean isLikeFeed(String feedId, String userId);
 
     int totalLike(String feedId);
+
+    Boolean unLike(String feedId, String userId);
 }

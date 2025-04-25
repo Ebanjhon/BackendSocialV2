@@ -2,14 +2,15 @@ package com.eban.FeedService.Controller;
 
 import com.eban.FeedService.DTO.FeedRequest;
 import com.eban.FeedService.DTO.MediaResource;
-import com.eban.FeedService.DTO.UserInfo;
 import com.eban.FeedService.Model.Feed;
+import com.eban.FeedService.Model.Like;
 import com.eban.FeedService.Service.FeedService;
 
 import java.util.List;
 import java.util.Map;
 
 import com.eban.FeedService.Service.ServiceImpl.GetUserGrpc;
+import com.eban.FeedService.Service.ServiceImpl.LikeServiceImpl;
 import com.eban.FeedService.Service.ServiceImpl.ListMediaResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +33,9 @@ public class FeedController {
 
     @Autowired
     private FeedService feedService;
+
+    @Autowired
+    private LikeServiceImpl likeService;
 
     @GetMapping
     public ResponseEntity<Object> getFeedDetail(@RequestHeader Map<String, String> headers,
@@ -130,4 +134,28 @@ public class FeedController {
 //            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy user với ID: " + userId);
 //        }
 //    }
+
+    @PostMapping("/action")
+    public ResponseEntity<Object> actionLikePost(@RequestHeader Map<String, String> headers, @RequestBody String feedId){
+        try {
+            Feed feed = feedService.getFeedById(feedId);
+            Like like = new Like(headers.get("x-user-id"), feed);
+            Like result = likeService.likeMedia(like);
+            return ResponseEntity.status(HttpStatus.CREATED).body(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Like không thành công!");
+        }
+    }
+
+    @DeleteMapping("/action")
+    public ResponseEntity<String> disLike(@RequestHeader Map<String, String> headers, @RequestBody String feedId){
+        try {
+            if(likeService.unLike(feedId,headers.get("x-user-id")))
+                return ResponseEntity.status(HttpStatus.OK).body("Success!");
+            else
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Fail!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Fail!");
+        }
+    }
 }

@@ -5,8 +5,10 @@ import com.eban.UserService.DTO.*;
 import com.eban.UserService.Model.User;
 import com.eban.UserService.Repository.UserRepository;
 import com.eban.UserService.Service.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -14,6 +16,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Repository
+@Transactional
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepo;
@@ -69,6 +73,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<SreachUser> getListUserByUserName(String username, String userId) {
         return userRepo.searchUsersWithFollowStatus(username, userId);
+    }
+
+    @Override
+    public User updateUser(UpdateUser user) {
+        Optional<User> u = userRepo.findByUserId(user.getUserId());
+
+        if (u.isPresent()) {
+            User existingUser = u.get();
+            existingUser.setAvatar(user.getAvatar());
+            existingUser.setCover(user.getCover());
+            existingUser.setEmail(user.getEmail());
+            existingUser.setFirstname(user.getFirstname());
+            existingUser.setLastname(user.getLastname());
+            return userRepo.save(existingUser);
+        }
+        throw new RuntimeException("User not found with id: " + user.getUserId());
     }
 
 }

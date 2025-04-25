@@ -6,6 +6,8 @@ import com.eban.FeedService.Service.LikeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class LikeServiceImpl implements LikeService {
 
@@ -14,7 +16,12 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public Like likeMedia(Like like) {
-        return likeRepository.save(like);
+        Optional<Like> l = likeRepository.findByUserIdAndFeedId(like.getUserId(), like.getFeed().getFeedId());
+        if(l.isPresent()){
+            return null;
+        }else{
+            return likeRepository.save(like);
+        }
     }
 
     @Override
@@ -27,4 +34,14 @@ public class LikeServiceImpl implements LikeService {
         return likeRepository.countByFeedId(feedId);
     }
 
+    @Override
+    public Boolean unLike(String feedId, String userId) {
+        Optional<Like> like = likeRepository.findByUserIdAndFeedId(userId, feedId);
+        if(like.isPresent()){
+            likeRepository.deleteById(like.get().getLikeId());
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

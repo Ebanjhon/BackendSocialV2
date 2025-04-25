@@ -1,9 +1,6 @@
 package com.eban.UserService.Service;
 
-import com.eban.UserService.DTO.SreachUser;
-import com.eban.UserService.DTO.UserDetailResponse;
-import com.eban.UserService.DTO.UserRequest;
-import com.eban.UserService.DTO.UserResponse;
+import com.eban.UserService.DTO.*;
 import com.eban.UserService.Model.User;
 import org.springframework.stereotype.Service;
 
@@ -28,4 +25,5 @@ public interface UserService {
 
     List<SreachUser> getListUserByUserName(String username, String userId);
 
+    User updateUser (UpdateUser user);
 }

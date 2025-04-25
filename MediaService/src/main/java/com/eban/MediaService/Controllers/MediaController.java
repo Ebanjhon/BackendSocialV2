@@ -79,6 +79,20 @@ public class MediaController {
         }
     }
 
+    @PostMapping("/upload-image")
+    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file)
+            throws IOException {
+        try {
+            if (TYPES_IMGAE.contains(file.getContentType())) {
+                String fileUrl = minioService.uploadFile(file);
+                return ResponseEntity.ok(fileUrl);
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File không hợp lệ!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lưu không thành công!");
+        }
+    }
+
     @PostMapping("/upload-multiple")
     public ResponseEntity<Object> uploadMultipleFiles(@RequestParam("files") List<MultipartFile> files,
             @RequestParam String postId) {
