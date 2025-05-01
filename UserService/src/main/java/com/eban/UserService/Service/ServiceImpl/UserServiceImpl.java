@@ -4,6 +4,7 @@ import com.eban.UserService.Config.ApiEndpoints;
 import com.eban.UserService.DTO.*;
 import com.eban.UserService.Model.User;
 import com.eban.UserService.Repository.UserRepository;
+import com.eban.UserService.Service.ServiceGRPC.CountFeed;
 import com.eban.UserService.Service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private CountFeed countFeed;
+
+    @Autowired
+    private FollowServiceImpl followService;
 
     @Override
     public Optional<UserResponse> GetUserByUserName(String username) {
@@ -60,7 +67,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDetailResponse> GetUserDetailByUserName(String username) {
-        return userRepo.findUserDetailByUsername(username);
+        Optional<UserDetailResponse> user = userRepo.findUserDetailByUsername(username);
+        if(user.isPresent()){
+            user.get().setCountFeed(countFeed.getCountFeedByUserId(user.get().getUserId()));
+            user.get().setCountFollow(followService.countFollower(user.get().getUserId()));
+            user.get().setCountFollowing(followService.countFollowing(user.get().getUserId()));
+            return user;
+        }
+        return null;
     }
 
     @Override

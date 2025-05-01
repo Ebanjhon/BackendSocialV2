@@ -9,4 +9,5 @@ public interface MediaService {
     Media saveMedia(Media media);
     List<Media> getListByPostId(String postId);
     List<MediaListResource> getListResource(List<String> feedIds);
+    void deleteAll(String feedId);
 }

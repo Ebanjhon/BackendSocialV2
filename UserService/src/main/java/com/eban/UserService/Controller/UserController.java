@@ -4,6 +4,7 @@ import com.eban.UserService.DTO.*;
 import com.eban.UserService.Model.Follow;
 import com.eban.UserService.Model.Profile;
 import com.eban.UserService.Model.User;
+import com.eban.UserService.Service.ServiceGRPC.CountFeed;
 import com.eban.UserService.Service.ServiceImpl.FollowServiceImpl;
 import com.eban.UserService.Service.ServiceImpl.ProfileServiceImpl;
 import com.eban.UserService.Service.ServiceImpl.UserServiceImpl;
@@ -127,21 +128,34 @@ public class UserController {
     // return ResponseEntity.status(HttpStatus.OK).body(response);
     // }
 
-//    @GetMapping("/id")
-//    public ResponseEntity<Object> getUserById(@RequestBody String id) {
-//        try {
-//            Optional<User> u = userService.GetUserByUserId(id);
-//            return ResponseEntity.status(HttpStatus.OK).body(u);
-//        } catch (Exception error) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-//        }
-//    }
+    //    @GetMapping("/id")
+    //    public ResponseEntity<Object> getUserById(@RequestBody String id) {
+    //        try {
+    //            Optional<User> u = userService.GetUserByUserId(id);
+    //            return ResponseEntity.status(HttpStatus.OK).body(u);
+    //        } catch (Exception error) {
+    //            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    //        }
+    //    }
 
     @PutMapping
     public ResponseEntity<Object> getUserById(@RequestBody UpdateUser user) {
         try {
             User u = userService.updateUser(user);
             return ResponseEntity.status(HttpStatus.OK).body(u);
+        } catch (Exception error) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+    }
+
+    @Autowired
+    private CountFeed countFeed;
+
+    @GetMapping("/test")
+    public ResponseEntity<Object> getUserById(@RequestParam String userId) {
+        try {
+            Long count = countFeed.getCountFeedByUserId(userId);
+            return ResponseEntity.status(HttpStatus.OK).body(count);
         } catch (Exception error) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }

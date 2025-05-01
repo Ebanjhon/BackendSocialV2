@@ -19,9 +19,9 @@ public class UserDetailResponse{
     private String phoneNumber;
     private LocalDate birthDate;
     private Boolean isCurentUser;
-    private int countFeed;
-    private int countFollow;
-    private int countFollowing;
+    private Long countFeed;
+    private Long countFollow;
+    private Long countFollowing;
 
     public UserDetailResponse() {
     }
@@ -145,27 +145,27 @@ public class UserDetailResponse{
         isCurentUser = curentUser;
     }
 
-    public int getCountFeed() {
+    public Long getCountFeed() {
         return countFeed;
     }
 
-    public void setCountFeed(int countFeed) {
+    public void setCountFeed(Long countFeed) {
         this.countFeed = countFeed;
     }
 
-    public int getCountFollow() {
+    public Long getCountFollow() {
         return countFollow;
     }
 
-    public void setCountFollow(int countFollow) {
+    public void setCountFollow(Long countFollow) {
         this.countFollow = countFollow;
     }
 
-    public int getCountFollowing() {
+    public Long getCountFollowing() {
         return countFollowing;
     }
 
-    public void setCountFollowing(int countFollowing) {
+    public void setCountFollowing(Long countFollowing) {
         this.countFollowing = countFollowing;
     }
 }

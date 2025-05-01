@@ -36,4 +36,9 @@ public class MediaServiceImpl implements MediaService {
         }
         return resources;
     }
+
+    @Override
+    public void deleteAll(String feedId) {
+        mediaRepository.deleteAllByPostId(feedId);
+    }
 }

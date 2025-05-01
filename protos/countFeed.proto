@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package userfeed;
+
+service CountFeedService {
+    rpc countFeedsByUserId (CountFeedRequest) returns (CountFeedResponse);
+}
+
+message CountFeedRequest {
+    string userId = 1;
+}
+
+message CountFeedResponse {
+    int64 countFeed = 1;
+}
