@@ -8,6 +8,8 @@ services:
       USER_SERVICE_URL: http://user-service:8083
       FEED_SERVICE_URL: http://feed-service:8082
       MEDIA_SERVICE_URL: http://media-service:8084
+      COMMENT_SERVICE_URL: http://comment-service:8085
+      NOTI_SERVICE_URL: http://noti-service:8086
     networks:
       - app_network
 
@@ -52,17 +54,17 @@ services:
     networks:
       - app_network
 
-  # comment-service:
-  #   build: ./CommentService
-  #   ports:
-  #     - "8085:8085"
-  #   environment:
-  #     SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/comment_db
-  #     SPRING_DATASOURCE_USERNAME: postgres
-  #     SPRING_DATASOURCE_PASSWORD: 123456
-  #     SPRING_JPA_HIBERNATE_DDL_AUTO: update
-  #   networks:
-  #     - app_network
+  comment-service:
+    build: ./CommentService
+    ports:
+      - "8085:8085"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/comment_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 123456
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    networks:
+      - app_network
 
   media-service:
     build: ./MediaService
@@ -94,6 +96,18 @@ services:
     volumes:
       - minio_data:/data
     command: server --console-address ":9001" /data
+    networks:
+      - app_network
+
+  noti-service:
+    build: ./NotiService
+    ports:
+      - "8086:8086"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/noti_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 123456
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
     networks:
       - app_network
 

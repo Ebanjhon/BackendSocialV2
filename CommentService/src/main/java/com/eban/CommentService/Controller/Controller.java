@@ -1,6 +1,8 @@
 package com.eban.CommentService.Controller;
 
 import com.eban.CommentService.DTO.CommentRequest;
+import com.eban.CommentService.DTO.CommentResponse;
+import com.eban.CommentService.DTO.User;
 import com.eban.CommentService.Model.Comment;
 import com.eban.CommentService.Service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/comment")
@@ -18,9 +21,19 @@ public class Controller {
     private CommentService service;
 
     @GetMapping
-    public ResponseEntity<Object> getListComment(@RequestParam String feedId) {
+    public ResponseEntity<Object> getListComment(@RequestParam String feedId,@RequestParam int page ) {
         try {
-            List<Comment> data = service.getListCommentByFeedId(feedId);
+            List<CommentResponse> data = service.getListComment(feedId, page, 5);
+            return ResponseEntity.status(HttpStatus.OK).body(data);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Fail get list comment!" + e);
+        }
+    }
+
+    @GetMapping("/child")
+    public ResponseEntity<Object> getListCommentChild(@RequestParam String parentId,@RequestParam int page ) {
+        try {
+            List<CommentResponse> data = service.getListCommentChild(parentId, page, 5);
             return ResponseEntity.status(HttpStatus.OK).body(data);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Fail get list comment!" + e);
@@ -28,8 +41,9 @@ public class Controller {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createComment(@RequestBody CommentRequest data) {
-        Comment comment = new Comment(data.getFeedId(), data.getParentCommentId(), data.getContent(), data.getUserId());
+    public ResponseEntity<Object> createComment(@RequestHeader Map<String, String> headers,@RequestBody CommentRequest data) {
+        String userId = headers.get("x-user-id");
+        Comment comment = new Comment(data.getFeedId(), data.getParentCommentId(), data.getContent(), userId);
         try {
             service.createComment(comment);
             return ResponseEntity.status(HttpStatus.OK).body(comment);
@@ -44,5 +58,15 @@ public class Controller {
             return ResponseEntity.status(HttpStatus.OK).body("Delete comment success!");
         else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Fail to delete comment!");
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<?> getUser(@RequestParam String userId) {
+        User user = service.getUser(userId);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.badRequest().body("Failed to get user!");
+        }
     }
 }

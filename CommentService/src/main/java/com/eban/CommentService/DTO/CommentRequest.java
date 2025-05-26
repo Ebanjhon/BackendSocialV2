@@ -2,13 +2,11 @@ package com.eban.CommentService.DTO;
 
 public class CommentRequest {
     private String feedId;
-    private String userId;
     private String parentCommentId;
     private String Content;
 
-    public CommentRequest(String feedId, String userId, String parentCommentId, String content) {
+    public CommentRequest(String feedId, String parentCommentId, String content) {
         this.feedId = feedId;
-        this.userId = userId;
         this.parentCommentId = parentCommentId;
         Content = content;
     }
@@ -19,14 +17,6 @@ public class CommentRequest {
 
     public void setFeedId(String feedId) {
         this.feedId = feedId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public String getParentCommentId() {

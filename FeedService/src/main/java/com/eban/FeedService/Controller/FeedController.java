@@ -159,4 +159,16 @@ public class FeedController {
         }
     }
 
+    @GetMapping("/profile")
+    public ResponseEntity<Object> getFeedListProfile(
+            @RequestHeader Map<String, String> headers,
+            @RequestParam String authorId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        String userId = headers.get("x-user-id");
+        List<String> feedIds = feedService.getListFeedByUserId(authorId,page, size).getContent();
+        List<MediaResource> result = listMediaResource.getMediaForFeeds(feedIds, userId);
+        return ResponseEntity.ok(result);
+    }
+
 }

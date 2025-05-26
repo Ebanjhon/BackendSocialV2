@@ -1,10 +1,13 @@
 package com.eban.UserService.Service.ServiceImpl;
 
+import com.eban.UserService.Model.Gender;
 import com.eban.UserService.Model.Profile;
 import com.eban.UserService.Repository.ProfileRepository;
 import com.eban.UserService.Service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
@@ -18,16 +21,15 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public Boolean editProfile(Profile profile) {
-        int updatedRows = profileRepository.updateProfileByUserId(
-                profile.getUserId(),
-                profile.getBio(),
-                profile.getGender(),
-                profile.getPhoneNumber(),
-                profile.getBirthDate()
-        );
-
-        return updatedRows != 0;
+    public void editProfile(String userId, String bio, String phone, Gender gender) {
+        Optional<Profile> result = profileRepository.findById(userId);
+        if (result.isPresent()) {
+            Profile profile = result.get();
+            profile.setBio(bio);
+            profile.setPhoneNumber(phone);
+            profile.setGender(gender);
+            profileRepository.save(profile);
+        }
     }
 
 }

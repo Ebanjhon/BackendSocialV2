@@ -70,7 +70,6 @@ public class UserController {
             @RequestParam String username) {
         try {
             Optional<UserDetailResponse> result = userService.GetUserDetailByUserName(username);
-            result.get().setCurentUser(headers.get("x-username") == username);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Không tìm thấy user!");
@@ -79,10 +78,10 @@ public class UserController {
 
     @GetMapping("/search")
     public ResponseEntity<Object> searchAccount(@RequestHeader Map<String, String> headers,
-            @RequestParam String username) {
+            @RequestParam String keyWord) {
         try {
             String userId = headers.get("x-user-id");
-            List<SreachUser> results = userService.getListUserByUserName(username, userId);
+            List<SreachUser> results = userService.getListUserByUserName(keyWord, userId);
             return ResponseEntity.status(HttpStatus.OK).body(results);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Không tìm thấy users!");
@@ -139,9 +138,10 @@ public class UserController {
     //    }
 
     @PutMapping
-    public ResponseEntity<Object> getUserById(@RequestBody UpdateUser user) {
+    public ResponseEntity<Object> updateUser(@RequestBody UpdateUser user) {
         try {
             User u = userService.updateUser(user);
+            profileService.editProfile(user.getUserId(), user.getBio(), user.getPhone(), user.getGender());
             return ResponseEntity.status(HttpStatus.OK).body(u);
         } catch (Exception error) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);

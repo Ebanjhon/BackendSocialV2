@@ -10,11 +10,7 @@ import com.eban.MediaService.model.TypeMedia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
@@ -24,6 +20,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/media")
@@ -62,15 +59,28 @@ public class MediaController {
         }
     }
 
+    @GetMapping("/profile")
+    public ResponseEntity<Object> getListMediaProfile(@RequestParam String authorId,
+                                                      @RequestParam int page,
+                                                      @RequestParam int size) {
+      try {
+          List<Media> result = mediaService.getListMediaProfile(authorId,page,size);
+          return ResponseEntity.status(HttpStatus.OK).body(result);
+      } catch (Exception e) {
+          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+      }
+    }
+
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam String postId)
+    public ResponseEntity<String> uploadFile(@RequestHeader Map<String, String> headers, @RequestParam("file") MultipartFile file, @RequestParam String postId)
             throws IOException {
+        String authorId = headers.get("x-user-id");
         try {
             if (!TYPES_IMGAE.contains(file.getContentType())) {
-                String fileUrl = uploadMediaImage(file, postId);
+                String fileUrl = uploadMediaImage(file, postId, authorId );
                 return ResponseEntity.ok(fileUrl);
             } else if (!TYPES_VIDEO.contains(file.getContentType())) {
-                String fileUrl = uploadMediaVideo(file, postId);
+                String fileUrl = uploadMediaVideo(file, postId, authorId);
                 return ResponseEntity.ok(fileUrl);
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File không hợp lệ!");
@@ -94,16 +104,17 @@ public class MediaController {
     }
 
     @PostMapping("/upload-multiple")
-    public ResponseEntity<Object> uploadMultipleFiles(@RequestParam("files") List<MultipartFile> files,
+    public ResponseEntity<Object> uploadMultipleFiles(@RequestHeader Map<String, String> headers,@RequestParam("files") List<MultipartFile> files,
             @RequestParam String postId) {
         List<String> fileUrls = new ArrayList<>();
+        String authorId = headers.get("x-user-id");
         try {
             for (MultipartFile file : files) {
                 String fileUrl = null;
                 if (TYPES_IMGAE.contains(file.getContentType())) {
-                    fileUrl = uploadMediaImage(file, postId);
+                    fileUrl = uploadMediaImage(file, postId, authorId);
                 } else if (TYPES_VIDEO.contains(file.getContentType())) {
-                    fileUrl = uploadMediaVideo(file, postId);
+                    fileUrl = uploadMediaVideo(file, postId, authorId);
                 }
                 if (fileUrl != null) {
                     fileUrls.add(fileUrl);
@@ -131,19 +142,19 @@ public class MediaController {
     }
 
     // upload images
-    public String uploadMediaImage(MultipartFile file, String postId) throws IOException {
+    public String uploadMediaImage(MultipartFile file, String postId, String authorId) throws IOException {
         int[] dimensions = getImageDimensions(file);
         try {
             if (dimensions[0] > 1000 || dimensions[1] > 1000) {
                 MultipartFile fileResized = imageResizeService.resizeImage(file);
                 dimensions = getImageDimensions(fileResized);
                 String fileUrl = minioService.uploadFile(fileResized);
-                Media media = new Media(fileUrl, postId, dimensions[0], dimensions[1], TypeMedia.IMAGE);
+                Media media = new Media(fileUrl, authorId, postId, dimensions[0], dimensions[1], TypeMedia.IMAGE);
                 mediaService.saveMedia(media);
                 return fileUrl;
             } else {
                 String fileUrl = minioService.uploadFile(file);
-                Media media = new Media(fileUrl, postId, dimensions[0], dimensions[1], TypeMedia.IMAGE);
+                Media media = new Media(fileUrl, authorId, postId, dimensions[0], dimensions[1], TypeMedia.IMAGE);
                 mediaService.saveMedia(media);
                 return fileUrl;
             }
@@ -153,10 +164,10 @@ public class MediaController {
     }
 
     // upload video
-    public String uploadMediaVideo(MultipartFile file, String postId) {
+    public String uploadMediaVideo(MultipartFile file, String postId, String AuthorId) {
         try {
             String fileUrl = minioService.uploadFile(file);
-            Media media = new Media(fileUrl, postId, 0, 0, TypeMedia.IMAGE);
+            Media media = new Media(fileUrl, AuthorId, postId, 0, 0, TypeMedia.IMAGE);
             mediaService.saveMedia(media);
             return fileUrl;
         } catch (Exception e) {

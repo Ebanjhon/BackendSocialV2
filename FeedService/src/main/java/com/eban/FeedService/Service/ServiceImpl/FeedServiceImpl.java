@@ -66,4 +66,10 @@ public class FeedServiceImpl implements FeedService {
         return feedRepo.countFeedsByAuthorId(authorId);
     }
 
+    @Override
+    public Page<String> getListFeedByUserId(String authorId,int page, int size) {
+        Page<String> feedIds = feedRepo.findFeedIdsByAuthorId(authorId,PageRequest.of(page, size));
+        return feedIds;
+    }
+
 }

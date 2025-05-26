@@ -31,7 +31,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // lấy thông tin user chi tiết
     @Query("SELECT new com.eban.UserService.DTO.UserDetailResponse( " +
-            "u.userId, u.username, u.firstname, u.lastname, u.email, u.avatar, u.active, u.dateJoid, " +
+            "u.userId, u.username, u.firstname, u.lastname, u.email, u.avatar, u.cover, u.active, u.dateJoid, " +
             "p.bio, p.gender, p.phoneNumber, p.birthDate) " +
             "FROM User u LEFT JOIN Profile p ON u.userId = p.userId " +
             "WHERE u.username = :username")
@@ -50,15 +50,26 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.userId = :userId")
     Optional<User> findByUserId(@Param("userId") String userId);
 
-//    User findByUserId(String userId);
+//    @Query("SELECT new com.eban.UserService.DTO.SreachUser(" +
+//            "u.userId, u.username, u.firstname, u.lastname, u.avatar, " +
+//            "CASE WHEN f.followId IS NOT NULL THEN true ELSE false END) " +
+//            "FROM User u " +
+//            "LEFT JOIN Follow f ON u.userId = f.userIdTarget AND f.userId = :currentUserId " +
+//            "WHERE u.username LIKE %:keyWord% AND u.userId <> :currentUserId")
+//    List<SreachUser> searchUsersWithFollowStatus(@Param("keyWord") String keyWord,
+//            @Param("currentUserId") String currentUserId);
 
     @Query("SELECT new com.eban.UserService.DTO.SreachUser(" +
             "u.userId, u.username, u.firstname, u.lastname, u.avatar, " +
             "CASE WHEN f.followId IS NOT NULL THEN true ELSE false END) " +
             "FROM User u " +
             "LEFT JOIN Follow f ON u.userId = f.userIdTarget AND f.userId = :currentUserId " +
-            "WHERE u.username LIKE %:username% AND u.userId <> :currentUserId")
-    List<SreachUser> searchUsersWithFollowStatus(@Param("username") String username,
+            "WHERE (LOWER(u.username) LIKE LOWER(CONCAT('%', :keyWord, '%')) " +
+            "   OR LOWER(u.firstname) LIKE LOWER(CONCAT('%', :keyWord, '%')) " +
+            "   OR LOWER(u.lastname) LIKE LOWER(CONCAT('%', :keyWord, '%'))) " +
+            "AND u.userId <> :currentUserId")
+    List<SreachUser> searchUsersWithFollowStatus(
+            @Param("keyWord") String keyWord,
             @Param("currentUserId") String currentUserId);
 
 }

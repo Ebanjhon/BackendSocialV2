@@ -29,4 +29,7 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
 
     @Query("SELECT COUNT(f) FROM Feed f WHERE f.authorId = :authorId")
     long countFeedsByAuthorId(@Param("authorId") String authorId);
+
+    @Query("SELECT f.feedId FROM Feed f WHERE f.authorId = :authorId ORDER BY f.createDay DESC")
+    Page<String> findFeedIdsByAuthorId(@Param("authorId") String authorId, Pageable pageable);
 }

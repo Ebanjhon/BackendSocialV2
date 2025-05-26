@@ -27,6 +27,9 @@ public class Media {
     private String url;
 
     @Column(nullable = false)
+    private String authorID;
+
+    @Column(nullable = false)
     private String postId;
 
     @Column(nullable = false)
@@ -41,6 +44,15 @@ public class Media {
 
     public Media(String url, String postId, int width, int height, TypeMedia mediaType) {
         this.url = url;
+        this.postId = postId;
+        this.width = width;
+        this.height = height;
+        this.mediaType = mediaType;
+    }
+
+    public Media(String url, String authorID, String postId, int width, int height, TypeMedia mediaType) {
+        this.url = url;
+        this.authorID = authorID;
         this.postId = postId;
         this.width = width;
         this.height = height;
@@ -93,5 +105,13 @@ public class Media {
 
     public void setPostId(String postId) {
         this.postId = postId;
+    }
+
+    public String getAuthorID() {
+        return authorID;
+    }
+
+    public void setAuthorID(String authorID) {
+        this.authorID = authorID;
     }
 }

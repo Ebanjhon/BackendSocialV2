@@ -1,6 +1,8 @@
 package com.eban.UserService.Model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -52,6 +54,9 @@ public class User {
         this.lastname = lastname;
         this.email = email;
     }
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Chat> chats = new ArrayList<>();
 
     public String getUserId() {
         return userId;

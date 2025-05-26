@@ -72,6 +72,7 @@ public class UserServiceImpl implements UserService {
             user.get().setCountFeed(countFeed.getCountFeedByUserId(user.get().getUserId()));
             user.get().setCountFollow(followService.countFollower(user.get().getUserId()));
             user.get().setCountFollowing(followService.countFollowing(user.get().getUserId()));
+            user.get().setCurentUser(user.get().getUsername().equals(username));
             return user;
         }
         return null;
@@ -85,14 +86,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<SreachUser> getListUserByUserName(String username, String userId) {
-        return userRepo.searchUsersWithFollowStatus(username, userId);
+    public List<SreachUser> getListUserByUserName(String keyWord, String userId) {
+        return userRepo.searchUsersWithFollowStatus(keyWord, userId);
     }
 
     @Override
     public User updateUser(UpdateUser user) {
         Optional<User> u = userRepo.findByUserId(user.getUserId());
-
         if (u.isPresent()) {
             User existingUser = u.get();
             existingUser.setAvatar(user.getAvatar());
@@ -104,5 +104,4 @@ public class UserServiceImpl implements UserService {
         }
         throw new RuntimeException("User not found with id: " + user.getUserId());
     }
-
 }

@@ -5,6 +5,7 @@ import com.eban.MediaService.Repository.MediaRepository;
 import com.eban.MediaService.Service.MediaService;
 import com.eban.MediaService.model.Media;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -40,5 +41,12 @@ public class MediaServiceImpl implements MediaService {
     @Override
     public void deleteAll(String feedId) {
         mediaRepository.deleteAllByPostId(feedId);
+    }
+
+    @Override
+    public List<Media> getListMediaProfile(String authorId, int page, int size) {
+        return mediaRepository
+                .getListMediaByAuthorId(authorId, PageRequest.of(page, size))
+                .getContent();
     }
 }

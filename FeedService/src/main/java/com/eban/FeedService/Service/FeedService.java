@@ -18,4 +18,5 @@ public interface FeedService {
 
     Long countFeedByUserId(String authorId);
 
+    Page<String> getListFeedByUserId(String authorId, int page, int size);
 }

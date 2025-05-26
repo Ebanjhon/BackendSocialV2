@@ -1,5 +1,6 @@
 package com.eban.UserService.Service;
 
+import com.eban.UserService.Model.Gender;
 import org.springframework.stereotype.Service;
 
 import com.eban.UserService.Model.Profile;
@@ -8,5 +9,5 @@ import com.eban.UserService.Model.Profile;
 public interface ProfileService {
     Profile saveProfile(Profile profile);
 
-    Boolean editProfile(Profile profile);
+    void editProfile(String userId, String bio, String phone, Gender gender);
 }

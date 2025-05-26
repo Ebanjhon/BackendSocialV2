@@ -10,4 +10,5 @@ public interface MediaService {
     List<Media> getListByPostId(String postId);
     List<MediaListResource> getListResource(List<String> feedIds);
     void deleteAll(String feedId);
+    List<Media> getListMediaProfile(String authorId, int page, int size);
 }

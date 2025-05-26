@@ -23,7 +23,7 @@ public interface UserService {
 
     void activeUserAccount(String userId);
 
-    List<SreachUser> getListUserByUserName(String username, String userId);
+    List<SreachUser> getListUserByUserName(String keyWord, String userId);
 
     User updateUser (UpdateUser user);
 }

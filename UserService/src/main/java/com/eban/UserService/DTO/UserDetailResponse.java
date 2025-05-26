@@ -12,6 +12,7 @@ public class UserDetailResponse{
     private String lastname;
     private String email;
     private String avatar;
+    private String cover;
     private boolean active;
     private LocalDateTime dateJoid;
     private String bio;
@@ -40,6 +41,24 @@ public class UserDetailResponse{
         this.phoneNumber = phoneNumber;
         this.birthDate = birthDate;
     }
+
+    public UserDetailResponse(String userId, String username, String firstname, String lastname, String email, String avatar, String cover, boolean active, LocalDateTime dateJoid, String bio, Gender gender, String phoneNumber, LocalDate birthDate) {
+        this.userId = userId;
+        this.username = username;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.avatar = avatar;
+        this.cover = cover;
+        this.active = active;
+        this.dateJoid = dateJoid;
+        this.bio = bio;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.birthDate = birthDate;
+    }
+
+
 
     public String getUserId() {
         return userId;
@@ -167,5 +186,13 @@ public class UserDetailResponse{
 
     public void setCountFollowing(Long countFollowing) {
         this.countFollowing = countFollowing;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 }
