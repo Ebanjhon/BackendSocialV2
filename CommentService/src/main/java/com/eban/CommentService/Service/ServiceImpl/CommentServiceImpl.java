@@ -2,6 +2,7 @@ package com.eban.CommentService.Service.ServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.eban.CommentService.DTO.CommentResponse;
 import com.eban.CommentService.DTO.User;
@@ -62,11 +63,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Boolean deleteCommentById(String commentId) {
-        try {
+        Optional<Comment> cmt = repository.findById(commentId);
+        if(cmt.isPresent()){
             repository.deleteById(commentId);
             return true;
-        } catch (Exception e) {
-            System.out.println(e);
+        }else{
             return false;
         }
     }
@@ -78,7 +79,6 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void UpdateComment(Comment comment) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'UpdateComment'");
     }
 

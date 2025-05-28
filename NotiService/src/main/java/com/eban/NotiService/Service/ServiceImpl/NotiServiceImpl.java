@@ -1,5 +1,6 @@
 package com.eban.NotiService.Service.ServiceImpl;
 
+import com.eban.NotiService.Configs.MyTextWebSocketHandler;
 import com.eban.NotiService.DTO.NotiListResponse;
 import com.eban.NotiService.DTO.User;
 import com.eban.NotiService.Model.Noti;
@@ -11,12 +12,14 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class NotiServiceImpl implements NotiService {
+
+    @Autowired
+    private MyTextWebSocketHandler webSocketHandler;
 
     @Autowired
     private NotiRepository notiRepository;
@@ -31,6 +34,9 @@ public class NotiServiceImpl implements NotiService {
 
     @Override
     public Noti createNoti(Noti data) {
+        if(!data.getCreaterId().equals(data.getUserId())){
+            webSocketHandler.sendMessageToUser(data.getUserId(), data.getTypeNotification().toString());
+        }
         return notiRepository.save(data);
     }
 
@@ -46,7 +52,6 @@ public class NotiServiceImpl implements NotiService {
                 .collect(Collectors.toList());
         return new PageImpl<>(notiListResponses, notiPage.getPageable(), notiPage.getTotalElements());
     }
-
 
     @Override
     public void deleteNoti(String notiId) {

@@ -8,7 +8,7 @@ public interface FeedService {
 
     Feed getFeedById(String feedId);
 
-    Boolean deleteFeedById(String feedId);
+    void deleteFeedById(String feedId);
 
     Feed updateFeed(Feed feed, String content);
 

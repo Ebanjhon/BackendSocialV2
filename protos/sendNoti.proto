@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package notification;
+
+option java_package = "com.eban.notification.grpc";
+option java_multiple_files = true;
+
+// Enum: loại thông báo
+enum TypeNoti {
+  LIKE = 0;
+  COMMENT = 1;
+  FOLLOW = 2;
+}
+
+// Request: gửi thông báo đến user
+message SendNotificationRequest {
+  string user_id = 1;
+  string creater_id = 2;
+  TypeNoti type = 3;
+}
+
+// Response: thông báo gửi thành công hay không
+message SendNotificationResponse {
+  bool success = 1;
+}
+
+// Service: khai báo gRPC
+service NotificationService {
+  rpc SendNotification(SendNotificationRequest) returns (SendNotificationResponse);
+}

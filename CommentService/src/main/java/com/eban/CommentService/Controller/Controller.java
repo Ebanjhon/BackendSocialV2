@@ -53,11 +53,14 @@ public class Controller {
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteComment(@RequestParam String commentId) {
-        if(service.deleteCommentById(commentId))
-            return ResponseEntity.status(HttpStatus.OK).body("Delete comment success!");
-        else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Fail to delete comment!");
+    public ResponseEntity<Boolean> deleteComment(@RequestParam String commentId) {
+        boolean result = service.deleteCommentById(commentId);
+        if(result)
+        {
+            return ResponseEntity.status(HttpStatus.OK).body(true);
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+        }
     }
 
     @GetMapping("/user")

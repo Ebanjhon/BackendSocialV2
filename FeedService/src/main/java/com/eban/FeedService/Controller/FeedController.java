@@ -69,17 +69,17 @@ public class FeedController {
     @DeleteMapping
     public ResponseEntity<Object> deleteFeed(
             @RequestHeader Map<String, String> headers,
-            @RequestParam String feedId) {
+            @RequestBody String feedId) {
         try {
             Feed feed = feedService.getFeedById(feedId);
-            if (feed.getAuthorId() == headers.get("x-user-id")) {
+            if (!feed.getAuthorId().equals(headers.get("x-user-id")) ) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bạn không thể xóa bài viết người khác!");
             }
             feedService.deleteFeedById(feedId);
+            return ResponseEntity.status(HttpStatus.OK).body("Delete post success!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lỗi khi xóa bài viết!");
         }
-        return ResponseEntity.noContent().build();
     }
 
     @PutMapping

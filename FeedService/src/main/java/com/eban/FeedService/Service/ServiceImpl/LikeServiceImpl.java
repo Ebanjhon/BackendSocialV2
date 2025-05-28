@@ -3,6 +3,7 @@ package com.eban.FeedService.Service.ServiceImpl;
 import com.eban.FeedService.Model.Like;
 import com.eban.FeedService.Repository.LikeRepository;
 import com.eban.FeedService.Service.LikeService;
+import com.eban.notification.grpc.TypeNoti;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,9 @@ import java.util.Optional;
 
 @Service
 public class LikeServiceImpl implements LikeService {
+
+    @Autowired
+    private GrpcNotificationClientService grpcNotificationClientService;
 
     @Autowired
     private LikeRepository likeRepository;
@@ -20,6 +24,7 @@ public class LikeServiceImpl implements LikeService {
         if(l.isPresent()){
             return null;
         }else{
+            grpcNotificationClientService.sendNotification("ada",like.getUserId(), TypeNoti.LIKE);
             return likeRepository.save(like);
         }
     }

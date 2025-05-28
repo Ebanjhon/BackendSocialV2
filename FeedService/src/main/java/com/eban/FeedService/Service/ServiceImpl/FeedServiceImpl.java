@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FeedServiceImpl implements FeedService {
-
     @Autowired
     private FeedRepository feedRepo;
 
@@ -24,13 +23,8 @@ public class FeedServiceImpl implements FeedService {
     }
 
     @Override
-    public Boolean deleteFeedById(String feedId) {
-        try {
+    public void deleteFeedById(String feedId) {
             feedRepo.deleteFeedById(feedId);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.eban.NotiService.Controller;
 
-import com.eban.NotiService.Configs.MyTextWebSocketHandler;
 import com.eban.NotiService.DTO.NotiCreateRequest;
 import com.eban.NotiService.DTO.NotiListResponse;
 import com.eban.NotiService.Model.Noti;
@@ -58,13 +57,4 @@ public class NotiController {
         }
     }
 
-    //websocket
-    @Autowired
-    private MyTextWebSocketHandler handler;
-
-    @PostMapping("/send")
-    public ResponseEntity<?> sendMessage(@RequestBody String message) {
-        handler.broadcast(message);
-        return ResponseEntity.ok("Message sent via WebSocket.");
-    }
 }
