@@ -47,6 +47,7 @@ services:
     ports:
       - "8082:8082"
     environment:
+      TZ: Asia/Ho_Chi_Minh
       SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/feed_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: 123456

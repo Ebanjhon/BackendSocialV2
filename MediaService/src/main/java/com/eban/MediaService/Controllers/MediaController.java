@@ -167,7 +167,7 @@ public class MediaController {
     public String uploadMediaVideo(MultipartFile file, String postId, String AuthorId) {
         try {
             String fileUrl = minioService.uploadFile(file);
-            Media media = new Media(fileUrl, AuthorId, postId, 0, 0, TypeMedia.IMAGE);
+            Media media = new Media(fileUrl, AuthorId, postId, 0, 0, TypeMedia.VIDEO);
             mediaService.saveMedia(media);
             return fileUrl;
         } catch (Exception e) {

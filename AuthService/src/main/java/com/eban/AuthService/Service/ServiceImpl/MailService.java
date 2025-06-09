@@ -22,7 +22,11 @@ public class MailService {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
-        mailSender.send(message);
+        try {
+            mailSender.send(message);
+        } catch (Exception e) {
+            System.out.println("Lỗi :" + e);
+        }
     }
 
     public void sendOTP(String to, String subject, String otpCode) throws MessagingException, UnsupportedEncodingException {
@@ -30,7 +34,7 @@ public class MailService {
 
         MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
                 StandardCharsets.UTF_8.name());
-        helper.setFrom(new InternetAddress("215101045eban@ou.edu.vn", "Helianthus"));
+        helper.setFrom(new InternetAddress("ebanjhony202@gmail.com", "Helianthus"));
         helper.setTo(to);
         helper.setSubject(subject);
 

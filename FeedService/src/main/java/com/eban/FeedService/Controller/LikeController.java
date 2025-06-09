@@ -19,16 +19,16 @@ public class LikeController {
     @Autowired
     private FeedServiceImpl feedService;
 
-    @PostMapping()
-    public ResponseEntity<Object> actionLikePost(@RequestBody String userId,@RequestBody String feedId){
-        try {
-            Feed feed = feedService.getFeedById(feedId);
-            Like like = new Like(userId, feed);
-            Like result = likeService.likeMedia(like);
-            return ResponseEntity.status(HttpStatus.CREATED).body(result);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Like không thành công!");
-        }
-    }
+//    @PostMapping()
+//    public ResponseEntity<Object> actionLikePost(@RequestBody String userId,@RequestBody String feedId){
+//        try {
+//            Feed feed = feedService.getFeedById(feedId);
+//            Like like = new Like(userId, feed);
+//            Like result = likeService.likeMedia(like);
+//            return ResponseEntity.status(HttpStatus.CREATED).body(result);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Like không thành công!");
+//        }
+//    }
 
 }

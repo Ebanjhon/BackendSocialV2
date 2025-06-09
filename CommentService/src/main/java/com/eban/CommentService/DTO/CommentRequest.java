@@ -3,12 +3,23 @@ package com.eban.CommentService.DTO;
 public class CommentRequest {
     private String feedId;
     private String parentCommentId;
-    private String Content;
+    private String content;
+    private String authorId;
+
+    public CommentRequest() {
+    }
 
     public CommentRequest(String feedId, String parentCommentId, String content) {
         this.feedId = feedId;
         this.parentCommentId = parentCommentId;
-        Content = content;
+        this.content = content;
+    }
+
+    public CommentRequest(String feedId, String parentCommentId, String content, String authorId) {
+        this.feedId = feedId;
+        this.parentCommentId = parentCommentId;
+        this.content = content;
+        this.authorId = authorId;
     }
 
     public String getFeedId() {
@@ -28,10 +39,18 @@ public class CommentRequest {
     }
 
     public String getContent() {
-        return Content;
+        return content;
     }
 
     public void setContent(String content) {
-        Content = content;
+        this.content = content;
+    }
+
+    public String getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(String authorId) {
+        this.authorId = authorId;
     }
 }

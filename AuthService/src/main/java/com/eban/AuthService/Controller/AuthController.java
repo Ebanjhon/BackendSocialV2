@@ -1,7 +1,7 @@
 package com.eban.AuthService.Controller;
 
 import com.eban.AuthService.AuthConfig.JwtTokenFilter;
-import com.eban.AuthService.DTO.LoginRsp;
+import com.eban.AuthService.DTO.LoginRequest;
 import com.eban.AuthService.DTO.TokenResponse;
 import com.eban.AuthService.Service.ServiceImpl.ActiveUserService;
 import com.eban.AuthService.Service.ServiceImpl.MailService;
@@ -36,6 +36,8 @@ public class AuthController {
     private OTPService otpService;
     @Autowired
     private ActiveUserService activeUserService;
+    @Autowired
+    private MailService mailService;
 
     @GetMapping
     public ResponseEntity<Object> getUser(@RequestParam String username) {
@@ -56,16 +58,16 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> authenticateUser(@RequestBody LoginRsp data) {
-        Optional<User> user = userService.authenticate(data.getUsername(), data.getPassword());
+    public ResponseEntity<Object> authenticateUser(@RequestBody LoginRequest data) {
+        Optional<User> user = userService.authenticate(data.getUserInput(), data.getPassword());
         if (user.isPresent()) {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(data.getUsername(), data.getPassword()));
+                    new UsernamePasswordAuthenticationToken(user.get().getUsername(), data.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } else {
             return ResponseEntity.status(401).body("Mật khẩu hoặc tài khoản không chính xác!");
         }
-        String t = jwtTokenFilter.generateToken(data.getUsername(), user.get().getRole());
+        String t = jwtTokenFilter.generateToken(user.get().getUsername(), user.get().getRole());
         TokenResponse token = new TokenResponse(t);
         return ResponseEntity.ok(token);
     }
@@ -94,10 +96,21 @@ public class AuthController {
             String email = headers.get("x-email");
             String userId = headers.get("x-user-id");
             String otp = otpService.saveOTP(userId);
+            System.out.println("OTP CODE: " + otp);
             mailService.sendOTP(email, "Xác nhận mã OTP", otp);
             return ResponseEntity.status(HttpStatus.OK).body("OTP: " + otp);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/test")
+    public ResponseEntity<String> testSendMail(@RequestHeader Map<String, String> headers) {
+        try {
+            mailService.sendSimpleMessage("yjhoneban1403@gmail.com", "TEST EMAIL", "OK nhé!");
+            return ResponseEntity.ok().body("");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -117,7 +130,6 @@ public class AuthController {
         }
     }
 
-    @Autowired
-    private MailService mailService;
+
 
 }

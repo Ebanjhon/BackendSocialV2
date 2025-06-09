@@ -35,9 +35,11 @@ public class NotiServiceImpl implements NotiService {
     @Override
     public Noti createNoti(Noti data) {
         if(!data.getCreaterId().equals(data.getUserId())){
-            webSocketHandler.sendMessageToUser(data.getUserId(), data.getTypeNotification().toString());
+            User user = getUserGrpc.getUserById(data.getUserId());
+            webSocketHandler.sendMessageToUser(data.getUserId(), user, data.getTypeNotification());
+            return notiRepository.save(data);
         }
-        return notiRepository.save(data);
+        return null;
     }
 
     @Override

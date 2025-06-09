@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.eban.CommentService.DTO.CommentResponse;
 import com.eban.CommentService.DTO.User;
+import com.eban.notification.grpc.TypeNoti;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Autowired
     private GetUserGrpc getUserGrpc;
+
+    @Autowired
+    private NotiGrpc notiService;
 
     @Override
     public List<CommentResponse> getListComment(String feedId, int page, int size) {
@@ -57,7 +61,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment createComment(Comment comment) {
+    public Comment createComment(Comment comment, String authorId) {
+        if(!comment.getUserId().equals(authorId)){
+            notiService.sendNotification(authorId,comment.getUserId(), TypeNoti.COMMENT, comment.getFeedId());
+        }
         return repository.save(comment);
     }
 
@@ -74,7 +81,12 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Boolean DeleteCommentByFeedId(String feedId) {
-        throw new UnsupportedOperationException("Unimplemented method 'DeleteCommentByFeedId'");
+        try {
+            repository.deleteByFeedId(feedId);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override

@@ -10,4 +10,6 @@ public interface LikeService {
     int totalLike(String feedId);
 
     Boolean unLike(String feedId, String userId);
+
+    Boolean deleteByFeedId(String feedId);
 }

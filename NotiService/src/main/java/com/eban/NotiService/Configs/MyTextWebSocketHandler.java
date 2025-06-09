@@ -1,5 +1,9 @@
 package com.eban.NotiService.Configs;
 
+import com.eban.NotiService.DTO.NotiPush;
+import com.eban.NotiService.DTO.User;
+import com.eban.NotiService.Model.TypeNoti;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -52,11 +56,29 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
         }
     }
 
-    public void sendMessageToUser(String userId, String message) {
+    public void sendMessageToUser(String userId, User user,TypeNoti Type) {
         WebSocketSession session = userSessions.get(userId);
+        String conten;
+        switch (Type) {
+            case LIKE:
+                conten = "Đã thích bài viết của bạn!";
+                break;
+            case COMMENT:
+                conten = "Đã bình luận bài viết của bạn!";
+                break;
+            case FOLLOW:
+                conten = "Đã bắt đầu theo dõi bạn!";
+                break;
+            default:
+                conten = "Bạn có một thông báo mới!";
+        }
+        NotiPush noti = new NotiPush(user.getUsername(), user.getFirstname(), user.getLastname(), conten);
         if (session != null && session.isOpen()) {
             try {
-                session.sendMessage(new TextMessage(message));
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonMessage = objectMapper.writeValueAsString(noti);
+                session.sendMessage(new TextMessage(jsonMessage));
+
                 System.out.println("✅ Sent message to user " + userId);
             } catch (IOException e) {
                 System.err.println("❌ Failed to send message to user " + userId);

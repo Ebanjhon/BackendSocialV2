@@ -1,4 +1,4 @@
-package com.eban.FeedService.Service.ServiceImpl;
+package com.eban.CommentService.Service.ServiceImpl;
 
 import com.eban.notification.grpc.NotificationServiceGrpc;
 import com.eban.notification.grpc.SendNotificationRequest;
@@ -8,8 +8,7 @@ import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GrpcNotificationClientService {
-
+public class NotiGrpc {
     @GrpcClient("noti-service")
     private NotificationServiceGrpc.NotificationServiceBlockingStub notificationStub;
 
@@ -29,4 +28,5 @@ public class GrpcNotificationClientService {
             return false;
         }
     }
+
 }

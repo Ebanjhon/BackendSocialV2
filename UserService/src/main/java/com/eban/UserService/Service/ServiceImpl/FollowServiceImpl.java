@@ -2,6 +2,8 @@ package com.eban.UserService.Service.ServiceImpl;
 
 import java.util.Optional;
 
+import com.eban.UserService.Service.ServiceGRPC.NotiGrpc;
+import com.eban.notification.grpc.TypeNoti;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +17,13 @@ public class FollowServiceImpl implements FollowService {
     @Autowired
     private FollowRepository followRepository;
 
+    @Autowired
+    private NotiGrpc notiGrpcService;
+
     @Override
     public Follow follow(String userId, String userTarget) {
         Follow follow = new Follow(userId, userTarget);
+        notiGrpcService.sendNotification(userTarget, userId, TypeNoti.FOLLOW);
         return followRepository.save(follow);
     }
 

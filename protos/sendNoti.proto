@@ -16,7 +16,8 @@ enum TypeNoti {
 message SendNotificationRequest {
   string user_id = 1;
   string creater_id = 2;
-  TypeNoti type = 3;
+  string feed_id = 3;
+  TypeNoti type = 4;
 }
 
 // Response: thông báo gửi thành công hay không

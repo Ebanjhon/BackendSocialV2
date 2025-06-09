@@ -24,7 +24,7 @@ public class LikeServiceImpl implements LikeService {
         if(l.isPresent()){
             return null;
         }else{
-            grpcNotificationClientService.sendNotification("ada",like.getUserId(), TypeNoti.LIKE);
+            grpcNotificationClientService.sendNotification(like.getFeed().getAuthorId(),like.getUserId(), TypeNoti.LIKE, like.getFeed().getFeedId());
             return likeRepository.save(like);
         }
     }
@@ -46,6 +46,18 @@ public class LikeServiceImpl implements LikeService {
             likeRepository.deleteById(like.get().getLikeId());
             return true;
         }else{
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean deleteByFeedId(String feedId) {
+        try {
+            likeRepository.deleteAllByFeedId(feedId);
+            System.out.println("Xoa likes thành công!");
+            return true;
+        } catch (Exception e) {
+            System.out.println("Xoa likes thất bại!");
             return false;
         }
     }

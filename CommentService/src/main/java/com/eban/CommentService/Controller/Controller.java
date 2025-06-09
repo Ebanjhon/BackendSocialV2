@@ -45,7 +45,7 @@ public class Controller {
         String userId = headers.get("x-user-id");
         Comment comment = new Comment(data.getFeedId(), data.getParentCommentId(), data.getContent(), userId);
         try {
-            service.createComment(comment);
+            service.createComment(comment, data.getAuthorId());
             return ResponseEntity.status(HttpStatus.OK).body(comment);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Fail Create Comment!" + e);

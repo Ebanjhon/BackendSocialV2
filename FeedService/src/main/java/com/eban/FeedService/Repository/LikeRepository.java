@@ -1,7 +1,9 @@
 package com.eban.FeedService.Repository;
 
 import com.eban.FeedService.Model.Like;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -20,4 +22,9 @@ public interface LikeRepository extends JpaRepository<Like, String> {
 
     @Query("SELECT l FROM Like l WHERE l.userId = :userId AND l.feed.feedId = :feedId")
     Optional<Like> findByUserIdAndFeedId(@Param("userId") String userId, @Param("feedId") String feedId);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Like l WHERE l.feed.feedId = :feedId")
+    void deleteAllByFeedId(@Param("feedId") String feedId);
 }

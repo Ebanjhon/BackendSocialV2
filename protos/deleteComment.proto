@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package comment;
+
+option java_package = "com.example.comment";
+option java_multiple_files = true;
+
+message FeedIdRequest {
+  string feedId = 1;
+}
+
+message SimpleResponse {
+  string message = 1;
+}
+
+service CommentService {
+  rpc DeleteCommentsByFeedId(FeedIdRequest) returns (SimpleResponse);
+}

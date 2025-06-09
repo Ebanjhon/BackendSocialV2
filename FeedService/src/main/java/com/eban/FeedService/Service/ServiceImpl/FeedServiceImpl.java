@@ -18,13 +18,21 @@ public class FeedServiceImpl implements FeedService {
     @Autowired
     private FeedRepository feedRepo;
 
+    @Autowired
+    private DeleteCommentGrpc deleteCommentGrpc;
+
     public Feed saveFeed(Feed feed) {
         return feedRepo.save(feed);
     }
 
     @Override
     public void deleteFeedById(String feedId) {
+        try{
+            deleteCommentGrpc.deleteComment(feedId);
             feedRepo.deleteFeedById(feedId);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     @Override

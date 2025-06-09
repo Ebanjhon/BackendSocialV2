@@ -14,7 +14,7 @@ public interface CommentService {
 
     List<CommentResponse> getListCommentChild(String commentParentId, int page, int size);
 
-    Comment createComment(Comment comment);
+    Comment createComment(Comment comment, String authorId);
 
     Boolean deleteCommentById(String commentId);
 

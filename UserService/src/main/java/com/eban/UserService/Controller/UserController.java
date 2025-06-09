@@ -54,6 +54,17 @@ public class UserController {
         }
     }
 
+    @GetMapping("/account")
+    public ResponseEntity<Object> getUserProfileByToken(@RequestHeader Map<String, String> headers) {
+        String username = headers.get("x-username");
+        Optional<UserResponse> user = userService.GetUserByUserName(username);
+        if (user.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Không tìm thấy user!");
+        }
+    }
+
     @PostMapping("/profile")
     public ResponseEntity<Object> saveUserProfile(@RequestHeader Map<String, String> headers,
             @RequestBody Profile profile) {

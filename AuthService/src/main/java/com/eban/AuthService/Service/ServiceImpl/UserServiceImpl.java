@@ -30,8 +30,8 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public Optional<User> authenticate(String username, String password) {
-        Optional<User> user = userRepo.findUserByUsername(username);
+    public Optional<User> authenticate(String userAccount, String password) {
+        Optional<User> user = userRepo.findUserByUsernameOrEmail(userAccount);
         if (user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())) {
             return user;
         }

@@ -14,8 +14,9 @@ public class FeedServiceApplication {
 	}
 
 	@PostConstruct
-	void started() {
+	public void init(){
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
+		System.out.println(">>> JVM TIMEZONE: " + TimeZone.getDefault().getID());
 	}
 
 }

@@ -30,6 +30,9 @@ public class Noti {
     @Column(nullable = false)
     private String userId;
 
+    @Column(nullable = true)
+    private String feedId;
+
     @CreationTimestamp
     @Column(name = "created_day", nullable = false, updatable = false)
     private LocalDateTime createDay;
@@ -38,6 +41,13 @@ public class Noti {
         this.typeNotification = typeNotification;
         CreaterId = createrId;
         this.userId = userId;
+    }
+
+    public Noti(TypeNoti typeNotification, String createrId, String userId, String feedId) {
+        this.typeNotification = typeNotification;
+        CreaterId = createrId;
+        this.userId = userId;
+        this.feedId = feedId;
     }
 
     public String getNotiId() {
@@ -78,5 +88,13 @@ public class Noti {
 
     public void setCreateDay(LocalDateTime createDay) {
         this.createDay = createDay;
+    }
+
+    public String getFeedId() {
+        return feedId;
+    }
+
+    public void setFeedId(String feedId) {
+        this.feedId = feedId;
     }
 }
